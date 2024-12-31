@@ -1,4 +1,4 @@
-package domain;
+package com.yk.logistic.domain;
 
 public class Member {
 	private Long id;

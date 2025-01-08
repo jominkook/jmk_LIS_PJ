@@ -1,43 +1,44 @@
 package com.yk.logistic.domain;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Getter
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", updatable = false)
+	@Column(name = "member_id")
 	private Long id;
-//	
-//	@Column(name = "password",nullable = false)
-//	private String password;
 	
-	@Column(name = "name", nullable = false)
+	@Column(nullable = false)
 	private String name;
 	
-//	@Column(name = "email", nullable = false)
-//	private String email;
-//	
-//	@Column(name = "address" ,nullable = true)
-//	private String address;
-//	
-//	@Column(name = "createdDate",nullable = true)
-//	private Date createdDate;
-//	
-//	@Column(name = "modifiedDate",nullable = true)
-//	private Date modifiedDate;
+	@Column(nullable = false)
+	private String email;
+	
+	@Column(nullable = false)
+	private String password;
+	
+	
+	@Builder
+	public Member(String name,String email,String password) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
+	}
+	
+	public Member changePassword(String password) {
+		this.password = password;
+		return this;
+	}
 
 }

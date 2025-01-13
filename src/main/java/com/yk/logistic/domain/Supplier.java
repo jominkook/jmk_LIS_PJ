@@ -13,11 +13,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@QueryEntity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-public class Suplier {
+//@Entity
+//@QueryEntity
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@Getter
+/*public class Supplier {
 	
 	@Id
 	@GeneratedValue
@@ -36,4 +36,4 @@ public class Suplier {
 	@JoinColumn(name = "deliver_id")
 	private Delivery delivery;
 
-}
+}*/

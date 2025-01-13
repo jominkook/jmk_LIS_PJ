@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberServiceImpl implements MemberService {
 	
 	private final JpaMemberRepository memberRepository;
-	private final VaildationCheck validationCheck;
+	private final ValidationCheck validationCheck;
 	
 	@Override
 	@Transactional

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>아이템 상세 정보</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const itemId = 2; // 예시로 itemId를 2로 설정
+            fetch(`http://localhost:9090/items/${itemId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("itemName").textContent = `아이템이름 : ${data.name}`;
+                    document.getElementById("itemOrigin").textContent = `원산지 : ${data.origin.street}, ${data.origin.city}, ${data.origin.zipCode}`;
+                    document.getElementById("itemPrice").textContent = `가격 : ${data.price}`;
+                    document.getElementById("itemStockQuantity").textContent = `수량 : ${data.stockQuantity}`;
+                })
+                .catch(error => console.error('Error fetching item data:', error));
+        });
+    </script>
+</head>
+<body>
+<h1>타임리프 익히기</h1>
+<p id="today"></p>
+<div>
+    <p id="itemName"></p>
+    <p id="itemOrigin"></p>
+    <p id="itemPrice"></p>
+    <p id="itemStockQuantity"></p>
+</div>
+<script>
+    document.getElementById("today").textContent = new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>

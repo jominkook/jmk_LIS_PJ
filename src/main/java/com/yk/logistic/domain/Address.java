@@ -1,25 +1,25 @@
 package com.yk.logistic.domain;
 
 import jakarta.persistence.Embeddable;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Embeddable
 @Getter
 @NoArgsConstructor
-@ToString
 public class Address {
-	private String city;
-	private String street;
-	private String zipcode;
-	
-	@Builder
-	public Address(String city, String street, String zipcode) {
-		this.city = city;
-		this.street = street;
-		this.zipcode = zipcode;
-	}
+    private String street;
+    private String city;
+    private String zipCode;
 
+    public Address(String street, String city, String zipCode) {
+        this.street = street;
+        this.city = city;
+        this.zipCode = zipCode;
+    }
+
+    @Override
+    public String toString() {
+        return street + ", " + city + ", " + zipCode;
+    }
 }

@@ -1,9 +1,10 @@
 package com.yk.logistic.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.yk.logistic.domain.Item;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface JpaItemRepository extends JpaRepository<Item,Long> {
 
+@Repository
+public interface JpaItemRepository extends JpaRepository<Item, Long> {
 }

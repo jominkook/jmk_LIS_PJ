@@ -16,10 +16,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @QueryEntity
@@ -47,8 +45,8 @@ public class Item {
 	
 	//공급자 객체
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "memeber_id")
-	private Member suplier;
+	@JoinColumn(name = "member_id")
+	private Member supplier;
 	
 	@OneToMany(mappedBy = "item")
 	private List<CategoryItem> categories = new ArrayList<>();
@@ -59,7 +57,7 @@ public class Item {
 		this.origin = origin;
 		this.price = price;
 		this.stockQuantity = stockQuantity;
-		this.suplier = supplier;
+		this.supplier = supplier;
 	}
 	
 	public void updateItem(String name, Address origin, int price, int stockQuantity) {

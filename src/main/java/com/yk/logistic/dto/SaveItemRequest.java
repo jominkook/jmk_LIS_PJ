@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.yk.logistic.domain.Address;
 import com.yk.logistic.domain.CategoryItem;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,5 +21,6 @@ public class SaveItemRequest {
 	private int stockQuantity;
 	
 	private List<CategoryItem> categories;
+	
 
 }

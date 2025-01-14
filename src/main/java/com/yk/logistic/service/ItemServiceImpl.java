@@ -1,7 +1,6 @@
 package com.yk.logistic.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +50,7 @@ public class ItemServiceImpl implements ItemService {
         // Repository로 전송
         Long savedItemId = itemRepository.save(item).getId();
         
+        
         // DB에 저장된 item 엔터티 -> view로 뿌리기
         Item savedItem = validationCheck.getItem(itemRepository.findById(savedItemId));
         
@@ -75,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
     public void updateItem(Long itemId, Long memberId, SaveItemRequest request) {
         Item findItem = validationCheck.getItem(itemRepository.findById(itemId));
         
-        if (!findItem.getSuplier().getId().equals(memberId)) {
+        if (!findItem.getSupplier().getId().equals(memberId)) {
             throw new IllegalArgumentException("수정이 허용되지 않는 멤버입니다.");
         }
         
@@ -86,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
     public void deleteItem(Long itemId, Long memberId) {
         Item findItem = validationCheck.getItem(itemRepository.findById(itemId));
         
-        if (!findItem.getSuplier().getId().equals(memberId)) {
+        if (!findItem.getSupplier().getId().equals(memberId)) {
             throw new IllegalArgumentException("삭제가 허용되지 않는 멤버입니다.");
         }
         
@@ -102,13 +102,13 @@ public class ItemServiceImpl implements ItemService {
     // 도메인을 DTO로
     private ItemResponse transformDomain(Item savedItem) {
         ItemResponse response = new ItemResponse();
-        
         response.setId(savedItem.getId());
         response.setName(savedItem.getName());
         response.setPrice(savedItem.getPrice());
         response.setStockQuantity(savedItem.getStockQuantity());
         response.setOrigin(savedItem.getOrigin());
         response.setCategories(savedItem.getCategories());
+        response.setMemberId(savedItem.getSupplier().getId()); // 추가된 부분
         return response;
     }
 }

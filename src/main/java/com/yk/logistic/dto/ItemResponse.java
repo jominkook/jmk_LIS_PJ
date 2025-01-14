@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.yk.logistic.domain.Address;
 import com.yk.logistic.domain.CategoryItem;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -28,5 +27,8 @@ public class ItemResponse {
      private int stockQuantity;
 
      private List<CategoryItem> categories;
-
+     
+     //임시
+     private Long memberId;
+     
 }

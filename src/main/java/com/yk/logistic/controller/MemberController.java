@@ -31,6 +31,8 @@ public class MemberController {
 		return memberService.changePassword(request);
 	}
 	
+	
+	
 
 
 }

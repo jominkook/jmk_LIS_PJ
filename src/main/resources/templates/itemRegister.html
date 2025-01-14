@@ -6,7 +6,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const itemId = 2; // 예시로 itemId를 2로 설정
-            fetch(`http://localhost:9092/items/${itemId}`)
+            fetch(`http://localhost:9090/items/${itemId}`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById("itemName").textContent = `아이템이름 : ${data.name}`;
@@ -39,7 +39,7 @@
                 memberId: parseInt(memberId)
             };
 
-            fetch(`http://localhost:9092/items/register?memberId=${memberId}`, {
+            fetch(`http://localhost:9090/items/register?memberId=${memberId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

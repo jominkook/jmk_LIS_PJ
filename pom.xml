@@ -54,7 +54,6 @@
 	    </dependency>
 
 	
-
 	    <!-- Mockito -->
 	    <dependency>
 	        <groupId>org.mockito</groupId>
@@ -118,7 +117,6 @@
             <artifactId>ojdbc8</artifactId>
         </dependency>
 
-   
 
 	</dependencies>
 	

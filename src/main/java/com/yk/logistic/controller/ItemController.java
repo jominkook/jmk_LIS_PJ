@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class ItemController {
     private final ItemService itemService;
   
-
-
-    
-
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemResponse> getItem(@PathVariable Long itemId) {
         ItemResponse item = itemService.findItem(itemId);

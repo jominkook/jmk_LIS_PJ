@@ -30,5 +30,5 @@ public class Stock {
     @JoinColumn(name = "item_id")
     private Item item;
 
-   
+
 }

@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "member_id")
+	@Column(name = "member_id",updatable = false)
 	private Long id;
 	
 	@Column(nullable = false)
@@ -49,5 +49,7 @@ public class Member {
 		this.password = password;
 		return this;
 	}
+	
+
 
 }

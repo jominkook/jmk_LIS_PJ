@@ -1,6 +1,8 @@
 package com.yk.logistic.service;
 
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.yk.logistic.domain.Member;
 import com.yk.logistic.repository.MemberRepository;
@@ -8,6 +10,7 @@ import com.yk.logistic.repository.MemberRepository;
 @Service
 public class MemberServiceImpl implements MemberService {
 	
+	@Autowired
 	private MemberRepository memberRepository;
 
 

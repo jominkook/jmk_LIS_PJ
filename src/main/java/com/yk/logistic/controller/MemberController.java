@@ -27,16 +27,5 @@ public class MemberController {
 
 	private final MemberService memberService;
 	
-	/*@PostMapping("/join")
-	public Long join(@RequestBody JoinMemberRequest request) {
-		return memberService.join(request);
-	}
 	
-	@PutMapping("/changePw")
-	public Long changePassword(@RequestBody ChangeMemberRequest request) {
-		return memberService.changePassword(request);
-	}*/
-	
-
-
 }

@@ -1,6 +1,7 @@
 package com.yk.logistic.domain;
 
 import com.querydsl.core.annotations.QueryEntity;
+import com.yk.logistic.config.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,16 +10,20 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @QueryEntity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+@Table(name = "member")
+public class Member extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "member_id",updatable = false)
@@ -40,8 +45,8 @@ public class Member {
 	@Builder
 	public Member(String name,String email,String password,MemberRole role) {
 		this.name = name;
-		this.email = email;
 		this.password = password;
+		this.email = email;
 		this.role = role;
 	}
 	
@@ -49,7 +54,7 @@ public class Member {
 		this.password = password;
 		return this;
 	}
-	
+
 
 
 }

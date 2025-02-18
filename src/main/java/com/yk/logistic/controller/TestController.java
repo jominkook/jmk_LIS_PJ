@@ -11,13 +11,13 @@ import com.yk.logistic.service.TestService;
 
 @RestController
 public class TestController {
-	 @Autowired
+	 /*@Autowired
 	 TestService testService;
 	 
 	 @GetMapping("/test")
 	 public List<Member> getAllMembers() {
 		 List<Member> members = testService.getAllMembers();
 		 return members;
-	 }
+	 }*/
 
 }

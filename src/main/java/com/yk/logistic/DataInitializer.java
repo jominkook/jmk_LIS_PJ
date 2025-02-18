@@ -2,7 +2,8 @@ package com.yk.logistic;
 
 import com.yk.logistic.domain.*;
 import com.yk.logistic.repository.JpaItemRepository;
-import com.yk.logistic.repository.JpaMemberRepository;
+import com.yk.logistic.repository.MemberRepository;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +11,9 @@ import org.springframework.stereotype.Component;
 public class DataInitializer implements CommandLineRunner {
 
     private final JpaItemRepository itemRepository;
-    private final JpaMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    public DataInitializer(JpaItemRepository itemRepository, JpaMemberRepository memberRepository) {
+    public DataInitializer(JpaItemRepository itemRepository, MemberRepository memberRepository) {
         this.itemRepository = itemRepository;
         this.memberRepository = memberRepository;
     }

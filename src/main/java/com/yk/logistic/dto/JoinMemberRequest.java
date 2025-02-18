@@ -1,12 +1,14 @@
 package com.yk.logistic.dto;
 
 import com.yk.logistic.domain.Member;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
+//@AllArgsConstructor //모든 필드를 받는 생성자 생성
+@NoArgsConstructor //기본 생성자 생성
 public class JoinMemberRequest {
 	private String name;
 	private String email;

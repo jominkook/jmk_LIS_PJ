@@ -18,7 +18,7 @@ public class LoginController {
 	
 	private final MemberService memberService;
 	
-	/* // 생성자를 통해 MemberService 주입
+	/* // 생성자를 통해 MemberService 주입 -> @RequiredArgsConstructor 대체가능
     public LoginController(MemberService memberService) {
         this.memberService = memberService;
     }*/
@@ -37,7 +37,5 @@ public class LoginController {
         boolean success = memberService.login(username, password);
         return success ? "Login successful" : "Login failed";
     }
-
-	
 	
 }

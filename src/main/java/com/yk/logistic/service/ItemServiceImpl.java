@@ -12,7 +12,7 @@ import com.yk.logistic.domain.MemberRole;
 import com.yk.logistic.dto.ItemResponse;
 import com.yk.logistic.dto.SaveItemRequest;
 import com.yk.logistic.repository.JpaItemRepository;
-import com.yk.logistic.repository.JpaMemberRepository;
+import com.yk.logistic.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class ItemServiceImpl implements ItemService {
     
     private final JpaItemRepository itemRepository;
-    private final JpaMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     private final ValidationCheck validationCheck;
 
     @Override

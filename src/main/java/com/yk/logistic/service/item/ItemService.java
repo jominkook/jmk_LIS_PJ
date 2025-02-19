@@ -1,10 +1,10 @@
-package com.yk.logistic.service;
+package com.yk.logistic.service.item;
 
 
 import java.util.List;
 
-import com.yk.logistic.dto.ItemResponse;
-import com.yk.logistic.dto.SaveItemRequest;
+import com.yk.logistic.dto.item.ItemResponse;
+import com.yk.logistic.dto.item.SaveItemRequest;
 
 public interface ItemService {
 	//재고 등록

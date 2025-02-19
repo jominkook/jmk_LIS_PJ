@@ -1,4 +1,4 @@
-package com.yk.logistic.domain;
+package com.yk.logistic.domain.member;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.yk.logistic.config.BaseEntity;
@@ -15,12 +15,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @Entity
-@QueryEntity
 @Getter
-@Setter
+@QueryEntity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
 public class Member extends BaseEntity {

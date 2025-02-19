@@ -1,4 +1,6 @@
-package com.yk.logistic.domain;
+package com.yk.logistic.domain.category;
+
+import com.yk.logistic.domain.item.Item;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

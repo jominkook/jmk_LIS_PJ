@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yk.logistic.domain.Member;
-import com.yk.logistic.repository.MemberRepository;
+import com.yk.logistic.domain.member.Member;
+import com.yk.logistic.repository.member.MemberRepository;
 
 
 

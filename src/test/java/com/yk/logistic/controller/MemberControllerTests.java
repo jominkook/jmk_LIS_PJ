@@ -15,9 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yk.logistic.dto.JoinMemberRequest;
-import com.yk.logistic.dto.ChangeMemberRequest;
-import com.yk.logistic.service.MemberService;
+import com.yk.logistic.dto.member.ChangeMemberRequest;
+import com.yk.logistic.dto.member.JoinMemberRequest;
+import com.yk.logistic.service.member.MemberService;
 
 @SpringBootTest
 @AutoConfigureMockMvc

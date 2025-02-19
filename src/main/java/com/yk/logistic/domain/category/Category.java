@@ -1,4 +1,4 @@
-package com.yk.logistic.domain;
+package com.yk.logistic.domain.category;
 
 import java.util.ArrayList;
 import java.util.List;

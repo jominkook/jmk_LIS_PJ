@@ -1,8 +1,9 @@
-package com.yk.logistic.controller;
+package com.yk.logistic.controller.item;
 
-import com.yk.logistic.dto.ItemResponse;
-import com.yk.logistic.dto.SaveItemRequest;
-import com.yk.logistic.service.ItemService;
+import com.yk.logistic.dto.item.ItemResponse;
+import com.yk.logistic.dto.item.SaveItemRequest;
+import com.yk.logistic.service.item.ItemService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

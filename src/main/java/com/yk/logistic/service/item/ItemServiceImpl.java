@@ -1,18 +1,19 @@
-package com.yk.logistic.service;
+package com.yk.logistic.service.item;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yk.logistic.domain.CategoryItem;
-import com.yk.logistic.domain.Item;
-import com.yk.logistic.domain.Member;
-import com.yk.logistic.domain.MemberRole;
-import com.yk.logistic.dto.ItemResponse;
-import com.yk.logistic.dto.SaveItemRequest;
-import com.yk.logistic.repository.JpaItemRepository;
-import com.yk.logistic.repository.MemberRepository;
+import com.yk.logistic.domain.category.CategoryItem;
+import com.yk.logistic.domain.item.Item;
+import com.yk.logistic.domain.member.Member;
+import com.yk.logistic.domain.member.MemberRole;
+import com.yk.logistic.dto.item.ItemResponse;
+import com.yk.logistic.dto.item.SaveItemRequest;
+import com.yk.logistic.repository.item.ItemRepository;
+import com.yk.logistic.repository.member.MemberRepository;
+import com.yk.logistic.service.validation.ValidationCheck;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     
-    private final JpaItemRepository itemRepository;
+    private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final ValidationCheck validationCheck;
 

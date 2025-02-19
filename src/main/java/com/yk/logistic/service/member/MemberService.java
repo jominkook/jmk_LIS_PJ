@@ -1,7 +1,7 @@
-package com.yk.logistic.service;
+package com.yk.logistic.service.member;
 
-import com.yk.logistic.dto.ChangeMemberRequest;
-import com.yk.logistic.dto.JoinMemberRequest;
+import com.yk.logistic.dto.member.ChangeMemberRequest;
+import com.yk.logistic.dto.member.JoinMemberRequest;
 
 public interface MemberService {
 	public boolean login(String name, String password);

@@ -1,4 +1,4 @@
-package com.yk.logistic.controller;
+package com.yk.logistic.controller.login;
 
 
 
@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.yk.logistic.service.MemberService;
+
+import com.yk.logistic.service.member.MemberService;
 
 import lombok.RequiredArgsConstructor;
 

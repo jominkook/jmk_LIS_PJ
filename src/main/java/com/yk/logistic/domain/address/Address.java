@@ -1,4 +1,4 @@
-package com.yk.logistic.domain;
+package com.yk.logistic.domain.address;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;

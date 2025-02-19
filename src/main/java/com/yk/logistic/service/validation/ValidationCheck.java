@@ -1,11 +1,11 @@
-package com.yk.logistic.service;
+package com.yk.logistic.service.validation;
 
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import com.yk.logistic.domain.Item;
-import com.yk.logistic.domain.Member;
+import com.yk.logistic.domain.item.Item;
+import com.yk.logistic.domain.member.Member;
 
 @Component
 public class ValidationCheck  {

@@ -1,6 +1,6 @@
-package com.yk.logistic.dto;
+package com.yk.logistic.dto.member;
 
-import com.yk.logistic.domain.Member;
+import com.yk.logistic.domain.member.Member;
 
 import lombok.Builder;
 import lombok.Data;

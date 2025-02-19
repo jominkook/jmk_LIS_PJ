@@ -1,13 +1,14 @@
-package com.yk.logistic.service;
+package com.yk.logistic.service.member;
 
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.yk.logistic.domain.Member;
-import com.yk.logistic.dto.ChangeMemberRequest;
-import com.yk.logistic.dto.JoinMemberRequest;
-import com.yk.logistic.repository.MemberRepository;
+
+import com.yk.logistic.domain.member.Member;
+import com.yk.logistic.dto.member.ChangeMemberRequest;
+import com.yk.logistic.dto.member.JoinMemberRequest;
+import com.yk.logistic.repository.member.MemberRepository;
+import com.yk.logistic.service.validation.ValidationCheck;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

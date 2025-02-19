@@ -1,6 +1,8 @@
-package com.yk.logistic.domain;
+package com.yk.logistic.domain.stock;
 
 import com.querydsl.core.annotations.QueryEntity;
+import com.yk.logistic.domain.item.Item;
+import com.yk.logistic.domain.member.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

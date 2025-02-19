@@ -17,7 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.yk.logistic.service.MemberService;
+import com.yk.logistic.controller.login.LoginController;
+import com.yk.logistic.service.member.MemberService;
 
 @SpringBootTest
 @AutoConfigureMockMvc

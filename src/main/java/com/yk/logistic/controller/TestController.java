@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yk.logistic.domain.Member;
+import com.yk.logistic.domain.member.Member;
 import com.yk.logistic.service.TestService;
 
 @RestController

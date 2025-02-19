@@ -1,9 +1,12 @@
-package com.yk.logistic.domain;
+package com.yk.logistic.domain.item;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.querydsl.core.annotations.QueryEntity;
+import com.yk.logistic.domain.address.Address;
+import com.yk.logistic.domain.category.CategoryItem;
+import com.yk.logistic.domain.member.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

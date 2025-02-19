@@ -1,4 +1,4 @@
-package com.yk.logistic.controller;
+package com.yk.logistic.controller.member;
 
 
 
@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.yk.logistic.dto.JoinMemberRequest;
-import com.yk.logistic.service.MemberService;
-
+import com.yk.logistic.dto.member.JoinMemberRequest;
+import com.yk.logistic.service.member.MemberService;
 
 import lombok.RequiredArgsConstructor;
 

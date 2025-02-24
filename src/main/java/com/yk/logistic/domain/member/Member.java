@@ -49,10 +49,17 @@ public class Member extends BaseEntity {
 		this.role = role;
 	}
 	
+	//패스워드 변경
 	public Member changePassword(String password) {
 		this.password = password;
 		return this;
 	}
+	
+	//권한변경
+	public Member changeRole(MemberRole role) {
+        this.role = role;
+        return this;
+    }
 
 
 

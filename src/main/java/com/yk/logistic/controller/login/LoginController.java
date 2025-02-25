@@ -2,6 +2,9 @@ package com.yk.logistic.controller.login;
 
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,16 +35,20 @@ public class LoginController {
         return "login"; // login 홈페이지
     }
 
-    // 임시 로그인 기능 테스트
+    /*// 임시 로그인 기능 테스트
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public Map<String, String> login(@RequestParam String username, @RequestParam String password) {
+    	Map<String, String> response = new HashMap<>();
         boolean success = memberService.login(username, password);
         if (success) {
-            return "redirect:/home"; // Redirect to home page on successful login
+            response.put("status", "success");
+            response.put("redirect", "/home");
         } else {
-            redirectAttributes.addFlashAttribute("error", "Login failed");
-            return "redirect:/login"; // Redirect back to login page on failure
+            response.put("status", "error");
+            response.put("message", "Login failed");
         }
-    }
+        return response;
+    }*/
 	
 }

@@ -11,6 +11,7 @@ import com.yk.logistic.repository.member.MemberRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+//임시 데이터 삽입
 @Component
 public class DataInitializer implements CommandLineRunner {
 

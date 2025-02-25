@@ -2,6 +2,7 @@ package com.yk.logistic.service.member;
 
 
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.yk.logistic.domain.member.Member;
@@ -17,35 +18,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 	
-
 	private final MemberRepository memberRepository;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-	
-	private final ValidationCheck validationCheck;
-
-
-	public boolean login(String name, String password) {
-	    try {
-	        Member member = memberRepository.findByName(name);
-	        return member != null && member.getPassword().equals(password);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+	public Long join(JoinMemberRequest requestDto) {
+		return memberRepository.save(Member.builder()
+				.email(requestDto.getEmail())
+				.password(bCryptPasswordEncoder.encode(requestDto.getPassword()))
+				.build().getId();
+		
 	}
-	
-	@Override
-	@Transactional
-    public Long join(JoinMemberRequest requestDto) {
-        validationCheck.validateDuplicate(memberRepository.findByEmail(requestDto.getEmail()));
-        return memberRepository.save(requestDto.toEntity()).getId();
-    }
-	
-    @Override
-    @Transactional
-    public Long changePassword(ChangeMemberRequest requestDto) {
-        Member findMember = validationCheck.getMember(memberRepository.findByEmail(requestDto.getEmail()));
-        findMember.changePassword(requestDto.getPassword());
-        return findMember.getId();
-    }
+
+
+
 }

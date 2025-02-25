@@ -1,5 +1,12 @@
 package com.yk.logistic.domain.member;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.querydsl.core.annotations.QueryEntity;
 import com.yk.logistic.config.BaseEntity;
 
@@ -22,7 +29,7 @@ import lombok.NoArgsConstructor;
 @QueryEntity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
-public class Member extends BaseEntity {
+public class Member implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "member_id",updatable = false)
@@ -31,7 +38,7 @@ public class Member extends BaseEntity {
 	@Column(nullable = false)
 	private String name;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 	
 	@Column(nullable = false)
@@ -42,7 +49,7 @@ public class Member extends BaseEntity {
 	
 	
 	@Builder
-	public Member(String name,String email,String password,MemberRole role) {
+	public Member(String name,String email,String password, MemberRole role, String auth) {
 		this.name = name;
 		this.password = password;
 		this.email = email;
@@ -60,6 +67,23 @@ public class Member extends BaseEntity {
         this.role = role;
         return this;
     }
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return List.of(new SimpleGrantedAuthority("user"));
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return email;
+	}
+	
+	@Override
+	public String getPassword() {
+		return password;
+	}
 
 
 

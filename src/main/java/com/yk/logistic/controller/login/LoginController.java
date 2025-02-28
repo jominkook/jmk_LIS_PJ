@@ -1,4 +1,4 @@
-package com.yk.logistic.controller.login;
+/*package com.yk.logistic.controller.login;
 
 
 
@@ -30,10 +30,10 @@ public class LoginController {
 	
 
 	// 로그인 페이지
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login"; // login 홈페이지
-    }
+    //@GetMapping("/login")
+    //public String loginPage() {
+        //return "login"; // login 홈페이지
+    //}
 
     /*// 임시 로그인 기능 테스트
     @PostMapping("/login")
@@ -51,4 +51,4 @@ public class LoginController {
         return response;
     }*/
 	
-}
+

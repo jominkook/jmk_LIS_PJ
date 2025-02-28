@@ -1,5 +1,6 @@
 package com.yk.logistic.service.member;
 
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import com.yk.logistic.domain.member.Member;
@@ -8,14 +9,13 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class UserDetailService implements UserDetailsService {
-	
-	private final MemberRepository memberRepository;
+public class MemberDetailService implements UserDetailsService {
+    
+    private final MemberRepository memberRepository;
 
-	@Override
-	public Member loadUserByUsername(String email) {
-		return memberRepository.findByEmail(email)
-				.orElseThrow(()-> new IllegalArgumentException(email));
-	}
-
+    @Override
+    public Member loadUserByUsername(String email)  {
+    	return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException((email)));
+    }
 }

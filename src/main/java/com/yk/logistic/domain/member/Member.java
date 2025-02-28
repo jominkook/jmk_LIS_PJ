@@ -1,5 +1,6 @@
 package com.yk.logistic.domain.member;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -7,13 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.yk.logistic.config.BaseEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,68 +19,62 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
-@Entity
 @Getter
-@QueryEntity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "member")
-public class Member implements UserDetails {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "member_id",updatable = false)
-	private Long id;
-	
-	@Column(nullable = false)
-	private String name;
-	
-	@Column(nullable = false, unique = true)
-	private String email;
-	
-	@Column(nullable = false)
-	private String password;
-	
-	@Enumerated(EnumType.STRING)
-	private MemberRole role;
-	
-	
-	@Builder
-	public Member(String name,String email,String password, MemberRole role, String auth) {
-		this.name = name;
-		this.password = password;
-		this.email = email;
-		this.role = role;
-	}
-	
-	//패스워드 변경
-	public Member changePassword(String password) {
-		this.password = password;
-		return this;
-	}
-	
-	//권한변경
-	public Member changeRole(MemberRole role) {
-        this.role = role;
-        return this;
+@Entity
+@Table(name = "members")
+public class Member implements UserDetails, Serializable {
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id", updatable = false)
+    private Long id;
+
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Builder
+    public Member(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return List.of(new SimpleGrantedAuthority("user"));
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_MEMBER"));
+    }
 
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return email;
-	}
-	
-	@Override
-	public String getPassword() {
-		return password;
-	}
+    @Override
+    public String getUsername() {
+        return email;
+    }
 
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -37,10 +37,14 @@ public class Member implements UserDetails, Serializable {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Builder
-    public Member(String email, String password) {
+    public Member(String email, String password, String name) {
         this.email = email;
         this.password = password;
+        this.name = name;
     }
 
     @Override
@@ -57,7 +61,7 @@ public class Member implements UserDetails, Serializable {
     public String getPassword() {
         return password;
     }
-
+    
     @Override
     public boolean isAccountNonExpired() {
         return true;

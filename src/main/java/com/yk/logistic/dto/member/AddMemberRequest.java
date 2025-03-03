@@ -1,13 +1,12 @@
 package com.yk.logistic.dto.member;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
 public class AddMemberRequest {
     private String email;
     private String password;
+    private String name; // name 필드 추가
 }

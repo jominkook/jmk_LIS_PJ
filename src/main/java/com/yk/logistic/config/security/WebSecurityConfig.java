@@ -43,7 +43,10 @@ public class WebSecurityConfig {
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
-                        .defaultSuccessUrl("/members", true)
+                        //.loginProcessingUrl("/login")
+                        .usernameParameter("useremail") // 이메일 필드 이름 설정
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/home", true) // 로그인 후 리디렉션 URL 설정
                         .permitAll()
                 )
                 .logout(logout -> logout

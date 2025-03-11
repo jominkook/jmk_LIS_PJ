@@ -3,6 +3,7 @@ package com.yk.logistic.domain.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.querydsl.core.annotations.QueryEntity;
 import com.yk.logistic.domain.address.Address;
 import com.yk.logistic.domain.categoryItem.CategoryItem;
 import com.yk.logistic.domain.member.Member;
@@ -17,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +27,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@QueryEntity
+@Table(name = "item")
 public class Item {
 	
 	@Id

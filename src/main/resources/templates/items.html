@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html class="no-js">
+<html class="no-js" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>About</title>
+    <title>Items</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Free HTML5 Template by FREEHTML5.CO" />
     <meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive" />
@@ -27,32 +27,31 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 section-heading text-center">
-                    <h2 class="to-animate">About</h2>
+                    <h2 class="to-animate">Items</h2>
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2 subtext to-animate">
-                            <h3>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</h3>
+                            <h3>Here are the items available in the system.</h3>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
-                    <div class="fh5co-person text-center to-animate">
-                        <figure><img src="images/person1.jpg" alt="Image"></figure>
-                        <h3>Jean Smith</h3>
-                        <span class="fh5co-position">Web Designer</span>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts</p>
-                        <ul class="social social-circle">
-                            <li><a href="#"><i class="icon-twitter"></i></a></li>
-                            <li><a href="#"><i class="icon-facebook"></i></a></li>
-                            <li><a href="#"><i class="icon-dribbble"></i></a></li>
-                        </ul>
-                    </div>
+                <div class="col-md-12 text-center">
+                    <a href="/items/new" class="btn btn-primary">Create New Item</a>
                 </div>
-                <!-- Add more team members as needed -->
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul>
+                        <li th:each="item : ${items}">
+                            <a th:href="@{/items/{id}(id=${item.id})}" th:text="${item.name}">Item Name</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
+
 
     <!-- jQuery -->
     <script src="js/jquery.min.js"></script>

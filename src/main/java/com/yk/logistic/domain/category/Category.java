@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name = "category")
 public class Category {
 	@Id
 	@GeneratedValue
@@ -29,12 +31,17 @@ public class Category {
 	private String name;
 	
 	@OneToMany(mappedBy = "category")
-	private List<CategoryItem> categoryItems = new ArrayList<>();
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "parrent_id")
-	private Category parent;
-	
-	@OneToMany(mappedBy = "parrent")
-	private List<Category> child = new ArrayList<>();
+    private List<CategoryItem> categoryItems = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Category parent;
+
+    @OneToMany(mappedBy = "parent")
+    private List<Category> child = new ArrayList<>();
+    
+    public Category(String name, Category parent) {
+        this.name = name;
+        this.parent = parent;
+    }
 }

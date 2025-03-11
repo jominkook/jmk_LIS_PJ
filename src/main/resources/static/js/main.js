@@ -82,11 +82,22 @@
         });
     };
 
+    // Items button click event
+    var itemsButtonClick = function() {
+        var itemsButton = document.getElementById('items-button');
+        if (itemsButton) {
+            itemsButton.addEventListener('click', function() {
+                window.location.href = '/items';
+            });
+        }
+    };
+
     // On load
     $(function(){
         placeholderFunction();
         contentWayPoint();
         formSubmission();
+        itemsButtonClick();
     });
 
 }());

@@ -34,7 +34,10 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li><span th:text="${username} + '님'"></span></li>
-						<li>
+                        <li>
+                            <button id="items-button" class="btn btn-primary" style="margin-top: 8px;">Items</button>
+                        </li>
+                        <li>
                            <button id="logout-button" class="btn btn-primary" style="margin-top: 8px;">Logout</button>
                        </li>
                     </ul>
@@ -70,5 +73,16 @@
     <script src="custom-js/jquery.magnific-popup.min.js"></script>
     <script src="custom-js/magnific-popup-options.js"></script>
     <script src="custom-js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var itemsButton = document.getElementById('items-button');
+            if (itemsButton) {
+                itemsButton.addEventListener('click', function() {
+                    window.location.href = '/items';
+                });
+            }
+
+        });
+    </script>
 </body>
 </html>

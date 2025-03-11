@@ -110,6 +110,18 @@
             <artifactId>ojdbc8</artifactId>
             <scope>runtime</scope>
         </dependency>
+        
+        <!-- QueryDSL JPA 의존성 -->
+	    <dependency>
+	        <groupId>com.querydsl</groupId>
+	        <artifactId>querydsl-jpa</artifactId>
+	    </dependency>
+	    <!-- QueryDSL APT 의존성 -->
+	    <dependency>
+	        <groupId>com.querydsl</groupId>
+	        <artifactId>querydsl-apt</artifactId>
+	        <scope>provided</scope>
+	    </dependency>
 	</dependencies>
 	
 

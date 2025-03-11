@@ -5,6 +5,7 @@ import java.util.List;
 import com.yk.logistic.domain.address.Address;
 import com.yk.logistic.domain.categoryItem.CategoryItem;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

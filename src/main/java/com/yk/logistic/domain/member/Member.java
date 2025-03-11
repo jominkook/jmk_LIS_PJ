@@ -8,8 +8,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.yk.logistic.domain.address.Address;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "members")
+@Table(name = "member")
 public class Member implements UserDetails, Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -40,13 +45,7 @@ public class Member implements UserDetails, Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Builder
-    public Member(String email, String password, String name) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-    }
-
+  
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_MEMBER"));
@@ -60,6 +59,21 @@ public class Member implements UserDetails, Serializable {
     @Override
     public String getPassword() {
         return password;
+    }
+    
+    @Embedded
+    private Address address;
+    
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
+    
+    @Builder
+    public Member(String email, String password, String name,Address address,MemberRole role) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.address = address;
+        this.role = role;
     }
     
     @Override

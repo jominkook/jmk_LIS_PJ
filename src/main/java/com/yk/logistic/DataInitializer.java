@@ -10,10 +10,12 @@ import com.yk.logistic.domain.categoryItem.CategoryItem;
 import com.yk.logistic.domain.item.Item;
 import com.yk.logistic.domain.member.Member;
 import com.yk.logistic.domain.member.MemberRole;
+import com.yk.logistic.domain.stock.Stock;
 import com.yk.logistic.repository.category.CategoryRepository;
 import com.yk.logistic.repository.categoryItem.CategoryItemRepository;
 import com.yk.logistic.repository.item.ItemRepository;
 import com.yk.logistic.repository.member.MemberRepository;
+import com.yk.logistic.repository.stock.StockRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +27,7 @@ public class DataInitializer implements CommandLineRunner {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
     private final CategoryItemRepository categoryItemRepository;
+    private final StockRepository stockRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -91,5 +94,12 @@ public class DataInitializer implements CommandLineRunner {
         // 변경된 카테고리 저장
         categoryRepository.save(computers);
         categoryRepository.save(electronics);
+
+        // 샘플 스톡 데이터 생성
+        Stock stock1 = new Stock(seller,laptop);
+        stockRepository.save(stock1);
+
+        Stock stock2 = new Stock(producer,smartphone);
+        stockRepository.save(stock2);
     }
 }

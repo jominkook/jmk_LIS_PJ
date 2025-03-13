@@ -44,14 +44,13 @@
                 <div class="col-md-12">
                     <ul>
                         <li th:each="item : ${items}">
-                            <a th:href="@{/items/{id}(id=${item.id})}" th:text="${item.name}">Item Name</a>
+                            <a th:href="@{/items/{itemId}(itemId=${item.id})}" th:text="${item.name}">Item Name</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
-
 
     <!-- jQuery -->
     <script src="js/jquery.min.js"></script>

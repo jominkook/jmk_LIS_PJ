@@ -1,9 +1,9 @@
 package com.yk.logistic.service.item;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-
 import com.yk.logistic.domain.categoryItem.CategoryItem;
 import com.yk.logistic.domain.item.Item;
 import com.yk.logistic.domain.member.Member;
@@ -71,8 +71,20 @@ public class ItemServiceImpl implements ItemService {
     
     @Override
     public List<ItemResDto> findItemList(Long memberId){
-    	return null;
+    	return itemRepository.findBySellerId(memberId).stream()
+                .map(item -> new ItemResDto(
+                        item.getId(),
+                        item.getName(),
+                        item.getOrigin(),
+                        item.getPrice(),
+                        item.getStockQuantity(),
+                        item.getCategories() 
+                ))
+                .toList(); 
+                
+    	    			
     }
+   
     
     @Override
     public void updateItem(Long itemId, Long memberId,SaveItemReqDto reqDto) {
@@ -94,15 +106,14 @@ public class ItemServiceImpl implements ItemService {
     }
     //도메인을 DTO로 변환시키는 메소드
     private ItemResDto transformDomain(Item savedItem) {
-        ItemResDto resDto = new ItemResDto();
-
-        resDto.setId(savedItem.getId());
-        resDto.setName(savedItem.getName());
-        resDto.setPrice(savedItem.getPrice());
-        resDto.setStockQuantity(savedItem.getStockQuantity());
-        resDto.setOrigin(savedItem.getOrigin());
-        resDto.setCategories(savedItem.getCategories());
-        return resDto;
+    	return new ItemResDto(
+                savedItem.getId(),
+                savedItem.getName(),
+                savedItem.getOrigin(),
+                savedItem.getPrice(),
+                savedItem.getStockQuantity(),
+                savedItem.getCategories()
+        );
     }
 
 }

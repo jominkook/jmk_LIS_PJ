@@ -21,5 +21,4 @@ public class SaveItemReqDto {
 	private int stockQuantity;
 	
 	private List<CategoryItem> categories;
-
 }

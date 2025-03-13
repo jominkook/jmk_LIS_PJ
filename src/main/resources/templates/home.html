@@ -76,12 +76,12 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var itemsButton = document.getElementById('items-button');
+            var memberId = [[${memberId}]]; 
             if (itemsButton) {
                 itemsButton.addEventListener('click', function() {
-                    window.location.href = '/items';
+                    window.location.href = '/items/member/' + memberId;
                 });
             }
-
         });
     </script>
 </body>

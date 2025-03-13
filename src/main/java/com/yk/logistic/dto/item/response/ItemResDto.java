@@ -17,5 +17,14 @@ public class ItemResDto {
 	private int price;
 	private int stockQuantity;
 	private List<CategoryItem> categories;
-
+	
+	public ItemResDto(Long id, String name, Address origin, int price, int stockQuantity, List<CategoryItem> categories) {
+        this.id = id;
+        this.name = name;
+        this.origin = origin;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.categories = categories;
+    }
+	
 }

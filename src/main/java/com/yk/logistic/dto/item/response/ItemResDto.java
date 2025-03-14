@@ -17,14 +17,16 @@ public class ItemResDto {
 	private int price;
 	private int stockQuantity;
 	private List<CategoryItem> categories;
+	private String sellerName;
 	
-	public ItemResDto(Long id, String name, Address origin, int price, int stockQuantity, List<CategoryItem> categories) {
+	public ItemResDto(Long id, String name, Address origin, int price, int stockQuantity, List<CategoryItem> categories,String sellerName) {
         this.id = id;
         this.name = name;
         this.origin = origin;
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.categories = categories;
+        this.sellerName = sellerName;
     }
 	
 }

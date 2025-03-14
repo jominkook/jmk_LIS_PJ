@@ -12,8 +12,11 @@ public interface ItemService {
     //등록한 아이템 하나 조회
     ItemResDto findItem(Long itemId);
 
-    //등록한 아이템 리스트 조회
-    List<ItemResDto> findItemList(Long memberId);
+    /*//등록한 아이템 리스트 조회
+    List<ItemResDto> findItemList(Long memberId);*/
+    
+    //판매자의 모든 물건 보기
+    List<ItemResDto> findAllItems();
 
     //등록한 아이템 수정
     void updateItem(Long itemId, Long memberId, SaveItemReqDto dto);

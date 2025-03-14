@@ -1,4 +1,4 @@
-/*package com.yk.logistic.controller.login;
+package com.yk.logistic.controller.login;
 
 
 
@@ -12,43 +12,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.yk.logistic.constant.SessionConst;
+import com.yk.logistic.domain.member.Member;
 import com.yk.logistic.service.member.MemberService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Controller
+@RequiredArgsConstructor
 public class LoginController {
-	
-	
-	private final MemberService memberService;
-	
-	/* // 생성자를 통해 MemberService 주입 -> @RequiredArgsConstructor 대체가능
-    public LoginController(MemberService memberService) {
-        this.memberService = memberService;
-    }*/
-	
+    private final MemberService memberService;
 
-	// 로그인 페이지
-    //@GetMapping("/login")
-    //public String loginPage() {
-        //return "login"; // login 홈페이지
-    //}
-
-    /*// 임시 로그인 기능 테스트
+    //로그인세션 기능처리
     @PostMapping("/login")
-    @ResponseBody
-    public Map<String, String> login(@RequestParam String username, @RequestParam String password) {
-    	Map<String, String> response = new HashMap<>();
-        boolean success = memberService.login(username, password);
-        if (success) {
-            response.put("status", "success");
-            response.put("redirect", "/home");
+    public String login(@RequestParam String username, @RequestParam String password, HttpSession session) {
+        Member member = memberService.login(username, password);
+        if (member != null) {
+            session.setAttribute(SessionConst.LOGIN_ID, member.getId());
+            return "redirect:/items/register";
         } else {
-            response.put("status", "error");
-            response.put("message", "Login failed");
+            return "redirect:/login?error";
         }
-        return response;
-    }*/
+    }
+}
 	
 

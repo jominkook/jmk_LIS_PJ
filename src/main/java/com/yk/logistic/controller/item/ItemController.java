@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.yk.logistic.constant.SessionConst;
 import com.yk.logistic.dto.item.request.SaveItemReqDto;
 import com.yk.logistic.dto.item.response.ItemResDto;
+import com.yk.logistic.service.category.CategoryService;
 import com.yk.logistic.service.item.ItemService;
 
 import jakarta.servlet.http.HttpSession;
@@ -26,16 +28,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ItemController {
 	private final ItemService itemService;
+	private final CategoryService categoryService;
 	
-	@PostMapping("/register")
-	public ResponseEntity<ItemResDto> registerItem(@RequestBody SaveItemReqDto reqDto,
-												   HttpSession session) {
-		Long currentLoginId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
-		
-		ItemResDto resDto = itemService.registerItem(reqDto, currentLoginId);
+	 @GetMapping("/register")
+     public String showRegisterForm(Model model) {
+         model.addAttribute("categories", categoryService.findAllCategories());
+         return "register-item"; // register-item.html 템플릿을 반환합니다.
+     }
 
-		return new ResponseEntity<>(resDto, HttpStatus.OK);
-	}
+	 @PostMapping("/register")
+	 public ResponseEntity<ItemResDto> registerItem(@RequestBody SaveItemReqDto reqDto,
+	                                                   HttpSession session) {
+        Long currentLoginId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
+        if (currentLoginId == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        ItemResDto resDto = itemService.registerItem(reqDto, currentLoginId);
+        return new ResponseEntity<>(resDto, HttpStatus.OK);
+    }
 	
 	@GetMapping("/{itemId}")
 	public ResponseEntity<ItemResDto> getItem(@PathVariable Long itemId) {
@@ -61,9 +72,9 @@ public class ItemController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
-    @GetMapping("/member/{memberId}")
-    public String findItemList(@PathVariable Long memberId, Model model) {
-        List<ItemResDto> items = itemService.findItemList(memberId);
+    @GetMapping
+    public String findItemList(Model model) {
+        List<ItemResDto> items = itemService.findAllItems();
         model.addAttribute("items", items);
         return "items"; // items.html 템플릿을 반환합니다.
     }

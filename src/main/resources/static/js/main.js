@@ -34,7 +34,7 @@
             }
         } , { offset: '85%' } );
     };
-
+	
     // Form submission
     var formSubmission = function() {
         // 로그인 폼 제출 처리
@@ -81,23 +81,42 @@
             });
         });
     };
+	
+	var formSubmission2 = function() {
+	            $('#register-item-form').on('submit', function(event) {
+	                event.preventDefault();
+	                var selectedCategories = $('#categories').val();
+	                var formData = {
+	                    id: $('#itemId').val(),
+	                    name: $('#name').val(),
+	                    origin: $('#origin').val(),
+	                    price: $('#price').val(),
+	                    stockQuantity: $('#stockQuantity').val(),
+	                    categories: selectedCategories.map(id => ({ id: id }))
+	                };
+	                $.ajax({
+	                    url: formData.id ? '/items/' + formData.id : '/items/register',
+	                    type: formData.id ? 'PUT' : 'POST',
+	                    contentType: 'application/json',
+	                    data: JSON.stringify(formData),
+	                    success: function(response) {
+	                        alert('Item ' + (formData.id ? 'updated' : 'registered') + ' successfully!');
+	                        window.location.href = '/items';
+	                    },
+	                    error: function(error) {
+	                        console.error('Error:', error);
+	                    }
+	                });
+	            });
+	        };
 
-    // Items button click event
-    var itemsButtonClick = function() {
-        var itemsButton = document.getElementById('items-button');
-        if (itemsButton) {
-            itemsButton.addEventListener('click', function() {
-                window.location.href = '/items';
-            });
-        }
-    };
 
     // On load
     $(function(){
         placeholderFunction();
         contentWayPoint();
         formSubmission();
-        itemsButtonClick();
+		formSubmission2();
     });
 
 }());

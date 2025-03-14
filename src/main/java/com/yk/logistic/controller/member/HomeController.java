@@ -5,7 +5,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yk.logistic.domain.member.Member;
 
@@ -16,9 +15,9 @@ public class HomeController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Member member = (Member) auth.getPrincipal();
         String name = member.getName();
-        Long memberId = member.getId();
+        //Long memberId = member.getId();
         model.addAttribute("username", name);
-        model.addAttribute("memberId", memberId);
+        //model.addAttribute("memberId", memberId);
         return "home";
     }
 

@@ -24,4 +24,14 @@ public class MemberService {
                 .name(dto.getName()) // name 필드 추가
                 .build()).getId();
     }
+    
+    public Member login(String email, String password) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+        if (bCryptPasswordEncoder.matches(password, member.getPassword())) {
+            return member;
+        } else {
+            throw new IllegalArgumentException("Invalid email or password");
+        }
+    }
 }

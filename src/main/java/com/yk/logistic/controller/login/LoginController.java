@@ -26,8 +26,8 @@ public class LoginController {
 
     //로그인세션 기능처리
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, HttpSession session) {
-        Member member = memberService.login(username, password);
+    public String login(@RequestParam String useremail, @RequestParam String password, HttpSession session) {
+        Member member = memberService.login(useremail, password);
         if (member != null) {
             session.setAttribute(SessionConst.LOGIN_ID, member.getId());
             return "redirect:/items/register";

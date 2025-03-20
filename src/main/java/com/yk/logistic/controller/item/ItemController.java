@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,17 +38,23 @@ public class ItemController {
          return "register-item"; // register-item.html 템플릿을 반환합니다.
      }
 
+//	 @PostMapping("/register")
+//	 public ResponseEntity<ItemResDto> registerItem(@RequestBody SaveItemReqDto reqDto,
+//                                                   HttpSession session) {
+//        Long currentLoginId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
+//        ItemResDto resDto = itemService.registerItem(reqDto, currentLoginId);
+//        return new ResponseEntity<>(resDto, HttpStatus.OK);
+//    }
+	 
 	 @PostMapping("/register")
-	 public ResponseEntity<ItemResDto> registerItem(@RequestBody SaveItemReqDto reqDto,
-	                                                   HttpSession session) {
-        Long currentLoginId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
-        if (currentLoginId == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        ItemResDto resDto = itemService.registerItem(reqDto, currentLoginId);
-        return new ResponseEntity<>(resDto, HttpStatus.OK);
-    }
+	 public ResponseEntity<ItemResDto> registerItem(@RequestBody SaveItemReqDto reqDto) {
+		 //Long currentLoginId = (Long) session.getAttribute(SessionConst.LOGIN_ID); -> Spring Security 구현시 동작안함
+	     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	     String email = authentication.getName(); // 인증된 사용자 이메일
+	     System.out.println("Authenticated user email: " + email);
+	     ItemResDto resDto = itemService.registerItem(reqDto); // memberId는 사용하지 않도록 수정
+	     return new ResponseEntity<>(resDto, HttpStatus.OK);
+	 } 
 	
 	@GetMapping("/{itemId}")
 	public ResponseEntity<ItemResDto> getItem(@PathVariable Long itemId) {

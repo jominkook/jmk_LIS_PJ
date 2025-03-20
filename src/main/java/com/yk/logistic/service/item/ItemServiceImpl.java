@@ -1,6 +1,9 @@
 package com.yk.logistic.service.item;
 
 import java.util.List;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.yk.logistic.domain.category.Category;
@@ -31,8 +34,9 @@ public class ItemServiceImpl implements ItemService {
     
     
     @Override
-    public ItemResDto registerItem(SaveItemReqDto reqDto, Long memberId) {
-        Member producer = validationCheck.getMember(memberRepository.findById(memberId));
+    public ItemResDto registerItem(SaveItemReqDto reqDto) {
+    	// 인증된 사용자 정보 가져오기
+        Member producer = getAuthenticatedMember();
         
         // 관리자인지 검증
         if (!producer.getRole().equals(MemberRole.PRODUCER)) {
@@ -148,6 +152,14 @@ public class ItemServiceImpl implements ItemService {
                 savedItem.getCategories().stream().toList(),
                 savedItem.getSeller().getName()
         );
+    }
+    
+    // 인증된 사용자 정보를 가져오는 메서드
+    private Member getAuthenticatedMember() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // 인증된 사용자의 이메일
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("인증된 사용자를 찾을 수 없습니다."));
     }
 
 }

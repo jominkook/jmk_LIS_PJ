@@ -8,4 +8,5 @@ import com.yk.logistic.domain.member.Member;
 
 public interface MemberRepository extends JpaRepository<Member,Long> {
     Optional<Member> findByEmail(String email);
+    Optional<Member> findById(Long id);
 }

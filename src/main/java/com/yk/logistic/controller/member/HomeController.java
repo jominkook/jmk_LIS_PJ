@@ -15,9 +15,7 @@ public class HomeController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Member member = (Member) auth.getPrincipal();
         String name = member.getName();
-        //Long memberId = member.getId();
         model.addAttribute("username", name);
-        //model.addAttribute("memberId", memberId);
         return "home";
     }
 

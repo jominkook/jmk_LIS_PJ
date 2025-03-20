@@ -7,7 +7,7 @@ import com.yk.logistic.dto.item.response.ItemResDto;
 
 public interface ItemService {
 	//아이템 등록
-    ItemResDto registerItem(SaveItemReqDto dto, Long memberId);
+    ItemResDto registerItem(SaveItemReqDto dto);
 
     //등록한 아이템 하나 조회
     ItemResDto findItem(Long itemId);

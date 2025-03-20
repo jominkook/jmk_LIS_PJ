@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.yk.logistic.service.member.MemberDetailService;
@@ -38,6 +39,9 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 추가
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션이 필요할 때 생성
+                    )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/items/register").authenticated()
                         .anyRequest().permitAll()
@@ -53,7 +57,8 @@ public class WebSecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
-                        .invalidateHttpSession(true)
+                        //.invalidateHttpSession(true)
+                        .invalidateHttpSession(false)
                         .permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화

@@ -3,7 +3,7 @@ package com.yk.logistic.domain.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.querydsl.core.annotations.QueryEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yk.logistic.domain.address.Address;
 import com.yk.logistic.domain.categoryItem.CategoryItem;
 import com.yk.logistic.domain.member.Member;
@@ -19,7 +19,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,8 +32,7 @@ import lombok.NoArgsConstructor;
 public class Item {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_seq_gen")
-    @SequenceGenerator(name = "item_seq_gen", sequenceName = "item_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
 
@@ -52,6 +50,7 @@ public class Item {
     private Member seller;
 
     @OneToMany(mappedBy = "item")
+    @JsonIgnore // 순환 참조 방지
     private List<CategoryItem> categories = new ArrayList<>();
 
     @Builder

@@ -1,13 +1,7 @@
 package com.yk.logistic.domain.address;
 
-
-
-
-
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.yk.logistic.config.serializer.AddressDeserializer;
-
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

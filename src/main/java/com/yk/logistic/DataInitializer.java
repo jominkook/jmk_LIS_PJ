@@ -6,13 +6,9 @@ import org.springframework.stereotype.Component;
 
 import com.yk.logistic.domain.address.Address;
 import com.yk.logistic.domain.category.Category;
-import com.yk.logistic.domain.categoryItem.CategoryItem;
-import com.yk.logistic.domain.item.Item;
 import com.yk.logistic.domain.member.Member;
 import com.yk.logistic.domain.member.MemberRole;
 import com.yk.logistic.repository.category.CategoryRepository;
-import com.yk.logistic.repository.categoryItem.CategoryItemRepository;
-import com.yk.logistic.repository.item.ItemRepository;
 import com.yk.logistic.repository.member.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,9 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class DataInitializer implements CommandLineRunner {
 
     private final MemberRepository memberRepository;
-    private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
-    private final CategoryItemRepository categoryItemRepository;
     //private final StockRepository stockRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -35,7 +29,7 @@ public class DataInitializer implements CommandLineRunner {
                 .email("jominkook@example.com")
                 .password(bCryptPasswordEncoder.encode("password1234"))
                 .name("조민국")
-                .role(MemberRole.PRODUCER)
+                .role(MemberRole.SELLER)
                 .address(new Address("서울특별시 종로구 세종대로 110", "서울특별시", "03172"))
                 .build();
         memberRepository.save(producer);
@@ -55,6 +49,13 @@ public class DataInitializer implements CommandLineRunner {
 
         Category computers = new Category("컴퓨터", electronics);
         categoryRepository.save(computers);
+
+        Category smartphones = new Category("스마트폰", electronics);
+        categoryRepository.save(smartphones);
+
+        Category furniture = new Category("가구", null);
+        categoryRepository.save(furniture);
+
 
     }
 }

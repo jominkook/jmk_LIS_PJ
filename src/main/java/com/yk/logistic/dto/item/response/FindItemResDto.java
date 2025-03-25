@@ -6,9 +6,7 @@ import lombok.Data;
 
 @Data
 public class FindItemResDto {
-	private String itemName;
-	private Address origin;
-	private int price;
-	private int stockQuantity;
-	
+    private String itemName; // 상품 이름
+    private Address origin; // 상품 위치
+    private int price; // 상품 가격
 }

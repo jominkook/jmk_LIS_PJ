@@ -1,24 +1,20 @@
 package com.yk.logistic.domain.item;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yk.logistic.domain.address.Address;
-import com.yk.logistic.domain.categoryItem.CategoryItem;
+import com.yk.logistic.domain.category.Category;
 import com.yk.logistic.domain.member.Member;
-import com.yk.logistic.exception.NotEnoughStockException;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,54 +26,43 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "item")
 public class Item {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
     private Long id;
 
-    private String name;
+    private String title; // 상품 제목
 
     @Embedded
-    private Address origin;
+    private Address origin; // 상품 위치 (도로명, 도시, 우편번호)
 
-    private int price;
+    private int price; // 상품 가격
 
-    private int stockQuantity;
+    @Enumerated(EnumType.STRING)
+    private ItemStatus status; // 거래 상태 (판매 중, 예약 중, 거래 완료)
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member seller;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private Member seller; // 판매자
 
-    @OneToMany(mappedBy = "item")
-    @JsonIgnore // 순환 참조 방지
-    private List<CategoryItem> categories = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category; // 카테고리
 
     @Builder
-    public Item(String name, Address origin, int price, int stockQuantity, Member seller) {
-        this.name = name;
+    public Item(String title, Address origin, int price, ItemStatus status, Member seller, Category category) {
+        this.title = title;
         this.origin = origin;
         this.price = price;
-        this.stockQuantity = stockQuantity;
+        this.status = status;
         this.seller = seller;
+        this.category = category;
     }
 
-    public void updateItem(String name, Address origin, int price, int stockQuantity) {
-        this.name = name;
+    // 상품 정보 업데이트 메서드
+    public void updateItem(String title, Address origin, int price, Category category) {
+        this.title = title;
         this.origin = origin;
         this.price = price;
-        this.stockQuantity = stockQuantity;
-    }
-
-    public void addStockCount(int count) {
-        stockQuantity += count;
-    }
-
-    public void removeStock(int quantity) {
-        int restStock = this.stockQuantity - quantity;
-        if (restStock < 0) {
-            throw new NotEnoughStockException("재고량이 부족합니다.");
-        }
-        this.stockQuantity = restStock;
+        this.category = category;
     }
 }

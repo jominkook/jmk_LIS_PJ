@@ -15,13 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.yk.logistic.constant.SessionConst;
 import com.yk.logistic.dto.item.request.SaveItemReqDto;
 import com.yk.logistic.dto.item.response.ItemResDto;
 import com.yk.logistic.service.category.CategoryService;
 import com.yk.logistic.service.item.ItemService;
-
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +32,7 @@ public class ItemController {
 	
 	 @GetMapping("/register")
      public String showRegisterForm(Model model) {
-         model.addAttribute("categories", categoryService.findAllCategories());
+		 model.addAttribute("categories", categoryService.findChildCategories());
          return "register-item"; // register-item.html 템플릿을 반환합니다.
      }
 
@@ -56,7 +54,7 @@ public class ItemController {
 	     return new ResponseEntity<>(resDto, HttpStatus.OK);
 	 } 
 	
-	@GetMapping("/{itemId}")
+	/*@GetMapping("/{itemId}")
 	public ResponseEntity<ItemResDto> getItem(@PathVariable Long itemId) {
 	
 		ItemResDto resDto =  itemService.findItem(itemId);
@@ -78,7 +76,7 @@ public class ItemController {
         Long currentLoginId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
         itemService.deleteItem(itemId, currentLoginId);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
+    }*/
     
     @GetMapping
     public String findItemList(Model model) {

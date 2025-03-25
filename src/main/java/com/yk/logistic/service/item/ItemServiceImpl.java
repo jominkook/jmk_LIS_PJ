@@ -6,15 +6,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.yk.logistic.domain.address.Address;
 import com.yk.logistic.domain.category.Category;
-import com.yk.logistic.domain.categoryItem.CategoryItem;
 import com.yk.logistic.domain.item.Item;
+import com.yk.logistic.domain.item.ItemStatus;
 import com.yk.logistic.domain.member.Member;
 import com.yk.logistic.domain.member.MemberRole;
 import com.yk.logistic.dto.item.request.SaveItemReqDto;
 import com.yk.logistic.dto.item.response.ItemResDto;
 import com.yk.logistic.repository.category.CategoryRepository;
-import com.yk.logistic.repository.categoryItem.CategoryItemRepository;
 import com.yk.logistic.repository.item.ItemRepository;
 import com.yk.logistic.repository.member.MemberRepository;
 import com.yk.logistic.service.validation.ValidationCheck;
@@ -26,134 +26,119 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-	private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
-    private final CategoryItemRepository categoryItemRepository;
     private final CategoryRepository categoryRepository;
     private final ValidationCheck validationCheck;
-    
-    
+
     @Override
     public ItemResDto registerItem(SaveItemReqDto reqDto) {
-    	// 인증된 사용자 정보 가져오기
-        Member producer = getAuthenticatedMember();
-        
-        // 관리자인지 검증
-        if (!producer.getRole().equals(MemberRole.PRODUCER)) {
-            throw new IllegalArgumentException("생산자 계정만이 물건을 등록가능.");
+        // 인증된 사용자 정보 가져오기
+        Member seller = getAuthenticatedMember();
+
+        // 판매자인지 검증
+        if (!seller.getRole().equals(MemberRole.SELLER)) {
+            throw new IllegalArgumentException("판매자 계정만이 물건을 등록할 수 있습니다.");
         }
-        
-        // dto -> entity 변환
+
+        // 카테고리 조회
+        Category category = categoryRepository.findById(reqDto.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID: " + reqDto.getCategoryId()));
+
+        // DTO -> Entity 변환
         Item item = Item.builder()
-                .name(reqDto.getName())
+                .title(reqDto.getName())
+                .origin(reqDto.getOrigin()) // Address 객체로 처리
                 .price(reqDto.getPrice())
-                .stockQuantity(reqDto.getStockQuantity())
-                .origin(reqDto.getOrigin())
-                .seller(producer)
+                .status(ItemStatus.AVAILABLE) // 기본 상태: 판매 중
+                .seller(seller)
+                .category(category)
                 .build();
-        
-        //아이템정보 먼저 저장 item id 필요하니
+
+        // 아이템 정보 저장
         itemRepository.save(item);
-        
-        // CategoryItem 객체의 ID를 올바르게 설정
-        for (Long categoryId : reqDto.getCategories()) {
-            if (categoryId == null) {
-                throw new IllegalArgumentException("CategoryItem ID must not be null");
-            }
-            Category category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID: " + categoryId));
-            CategoryItem categoryItem = new CategoryItem(category, item);
-            item.getCategories().add(categoryItem);
-        }
 
-        // CategoryItem을 저장
-        categoryItemRepository.saveAll(item.getCategories());
-
-        // DB에 저장된 item 엔티티 -> 저장된 정보를 View에 전달하기 위한 정보
-        Item savedItem = validationCheck.getItem(itemRepository.findById(item.getId()));
-
-        // domain -> dto 변환
-        ItemResDto resDto = transformDomain(savedItem);
-
-        return resDto;
+        // 저장된 Item -> DTO 변환
+        return transformDomain(item);
     }
-    
+
     @Override
     public ItemResDto findItem(Long itemId) {
-    	Item findItem = validationCheck.getItem(itemRepository.findById(itemId));
-    	
-    	//domain -> dto 변환
-    	ItemResDto resDto = transformDomain(findItem);
-    	
-    	return resDto;
+        // 아이템 조회 및 검증
+        Item findItem = validationCheck.getItem(itemRepository.findById(itemId));
+
+        // Entity -> DTO 변환
+        return transformDomain(findItem);
     }
-    
-   /* //등록한 상품 -> 추후 구현 현재는 필요없음
-    @Override
-    public List<ItemResDto> findItemList(Long memberId){
-    	return itemRepository.findBySellerId(memberId).stream()
-                .map(item -> new ItemResDto(
-                        item.getId(),
-                        item.getName(),
-                        item.getOrigin(),
-                        item.getPrice(),
-                        item.getStockQuantity(),
-                        item.getCategories().stream().toList(),
-                        item.getSeller().getName()
-                ))
-                .toList(); 
-                
-    	    			
-    }*/
-    
-    //판매자 물건리스트 조회
+
     @Override
     public List<ItemResDto> findAllItems() {
+        // 모든 아이템 조회
         return itemRepository.findAll().stream()
-                .map(item -> new ItemResDto(
-                        item.getId(),
-                        item.getName(),
-                        item.getOrigin(),
-                        item.getPrice(),
-                        item.getStockQuantity(),
-                        item.getCategories().stream().toList(),
-                        item.getSeller().getName() // 판매자 이름 추가
-                ))
+                .map(this::transformDomain) // Entity -> DTO 변환
                 .toList();
     }
-   
-    
+
     @Override
-    public void updateItem(Long itemId, Long memberId,SaveItemReqDto reqDto) {
-    	Item findItem = validationCheck.getItem(itemRepository.findById(itemId));
-    	
-    	if(!findItem.getSeller().getId().equals(memberId)) {
-    		throw new IllegalArgumentException("수정이 허용되지 않는 멤버.");
-    	}
-    	findItem.updateItem(reqDto.getName(), reqDto.getOrigin(), reqDto.getPrice(), reqDto.getStockQuantity());
-    }
-    
-    @Override
-    public void deleteItem(Long itemId, Long memberId) {
-    	Item findItem = validationCheck.getItem(itemRepository.findById(itemId));
-    	
-    	if(!findItem.getSeller().getId().equals(memberId)) {
-    		throw new IllegalArgumentException("삭제가 허용되지 않는 멤버.");
-    	}
-    }
-    //도메인을 DTO로 변환시키는 메소드
-    private ItemResDto transformDomain(Item savedItem) {
-    	return new ItemResDto(
-                savedItem.getId(),
-                savedItem.getName(),
-                savedItem.getOrigin(),
-                savedItem.getPrice(),
-                savedItem.getStockQuantity(),
-                savedItem.getCategories().stream().toList(),
-                savedItem.getSeller().getName()
+    public void updateItem(Long itemId, SaveItemReqDto reqDto) {
+        // 인증된 사용자 정보 가져오기
+        Member seller = getAuthenticatedMember();
+
+        // 아이템 조회 및 검증
+        Item findItem = validationCheck.getItem(itemRepository.findById(itemId));
+
+        // 수정 권한 확인
+        if (!findItem.getSeller().getId().equals(seller.getId())) {
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        }
+
+        // 카테고리 조회
+        Category category = categoryRepository.findById(reqDto.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID: " + reqDto.getCategoryId()));
+
+        // 아이템 정보 업데이트
+        findItem.updateItem(
+                reqDto.getName(),
+                reqDto.getOrigin(), // Address 객체로 처리
+                reqDto.getPrice(),
+                category
         );
     }
-    
+
+    @Override
+    public void deleteItem(Long itemId) {
+        // 인증된 사용자 정보 가져오기
+        Member seller = getAuthenticatedMember();
+
+        // 아이템 조회 및 검증
+        Item findItem = validationCheck.getItem(itemRepository.findById(itemId));
+
+        // 삭제 권한 확인
+        if (!findItem.getSeller().getId().equals(seller.getId())) {
+            throw new IllegalArgumentException("삭제 권한이 없습니다.");
+        }
+
+        // 아이템 삭제
+        itemRepository.delete(findItem);
+    }
+
+    private ItemResDto transformDomain(Item item) {
+        String parentCategoryName = item.getCategory().getParent() != null
+                ? item.getCategory().getParent().getName()
+                : "없음"; // 부모 카테고리가 없을 경우 "없음"으로 설정
+
+        return new ItemResDto(
+                item.getId(),
+                item.getTitle(),
+                item.getOrigin(),
+                item.getPrice(),
+                item.getStatus().name(),
+                item.getSeller().getName(),
+                item.getCategory().getName(),
+                parentCategoryName // 부모 카테고리 이름 추가
+        );
+    }
+
     // 인증된 사용자 정보를 가져오는 메서드
     private Member getAuthenticatedMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -161,5 +146,4 @@ public class ItemServiceImpl implements ItemService {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("인증된 사용자를 찾을 수 없습니다."));
     }
-
 }

@@ -17,9 +17,8 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	private final CategoryRepository categoryRepository;
 
-	@Override
-	public List<Category> findAllCategories() {
-		return categoryRepository.findAll();
-	}
+    public List<Category> findChildCategories() {
+        return categoryRepository.findByParentIsNotNull(); // 자식 카테고리만 반환
+    }
 
 }

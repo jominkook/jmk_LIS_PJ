@@ -74,7 +74,7 @@
 		        categoryId: parseInt(document.getElementById('category').value)
 		    };
 
-		    console.log('Form Data:', formData);
+		    console.log('Form Data:', formData); // 디버깅용 로그
 
 		    fetch('http://localhost:8080/items/register', {
 		        method: 'POST',

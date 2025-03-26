@@ -54,35 +54,30 @@ public class ItemController {
 	     return new ResponseEntity<>(resDto, HttpStatus.OK);
 	 } 
 	
-	/*@GetMapping("/{itemId}")
-	public ResponseEntity<ItemResDto> getItem(@PathVariable Long itemId) {
-	
-		ItemResDto resDto =  itemService.findItem(itemId);
-		return new ResponseEntity<>(resDto,HttpStatus.OK);
-	}
-	
-	@PutMapping("/{itemId}")
-    public ResponseEntity<Void> updateItem(@PathVariable Long itemId,
-                                           @RequestBody SaveItemReqDto reqDto,
-                                           HttpSession session) {
-        Long currentLoginId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
-        itemService.updateItem(itemId, currentLoginId, reqDto);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{itemId}")
-    public ResponseEntity<Void> deleteItem(@PathVariable Long itemId,
-                                           HttpSession session) {
-        Long currentLoginId = (Long) session.getAttribute(SessionConst.LOGIN_ID);
-        itemService.deleteItem(itemId, currentLoginId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }*/
     
     @GetMapping
     public String findItemList(Model model) {
         List<ItemResDto> items = itemService.findAllItems();
         model.addAttribute("items", items);
         return "items"; // items.html 템플릿을 반환합니다.
+    }
+    
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        ItemResDto item = itemService.findItem(id); // 수정할 아이템 정보 가져오기
+        if (item == null) {
+            throw new IllegalArgumentException("아이템을 찾을 수 없습니다.");
+        }
+        model.addAttribute("item", item);
+        model.addAttribute("categories", categoryService.findChildCategories()); // 카테고리 목록
+        return "edit-item"; // edit-item.html 템플릿 반환
+    }
+
+    // 수정 요청 처리
+    @PostMapping("/edit/{id}")
+    public String updateItem(@PathVariable Long id, SaveItemReqDto reqDto) {
+        itemService.updateItem(id, reqDto); // 아이템 수정
+        return "redirect:/items"; // 수정 후 아이템 목록 페이지로 리다이렉트
     }
 
 }

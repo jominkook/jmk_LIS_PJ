@@ -65,7 +65,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResDto findItem(Long itemId) {
         // 아이템 조회 및 검증
-        Item findItem = validationCheck.getItem(itemRepository.findById(itemId));
+        Item findItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("아이템을 찾을 수 없습니다."));
 
         // Entity -> DTO 변환
         return transformDomain(findItem);
@@ -134,6 +135,7 @@ public class ItemServiceImpl implements ItemService {
                 item.getPrice(),
                 item.getStatus().name(),
                 item.getSeller().getName(),
+                item.getSeller().getEmail(), 
                 item.getCategory().getName(),
                 parentCategoryName // 부모 카테고리 이름 추가
         );

@@ -14,8 +14,7 @@ public class ItemResDto {
     private int price; // 상품 가격
     private String status; // 거래 상태
     private String sellerName; // 판매자 이름
+    private String sellerEmail; // 판매자 이메일
     private String categoryName; // 카테고리 이름
     private String parentCategoryName; // 부모 카테고리 이름
-    
- 
 }

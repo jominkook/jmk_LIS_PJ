@@ -33,49 +33,61 @@
     </form>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const submitButton = document.getElementById('submitButton');
-            const editForm = document.getElementById('editForm');
+		document.addEventListener('DOMContentLoaded', function () {
+		    const submitButton = document.getElementById('submitButton');
+		    const editForm = document.getElementById('editForm');
 
-            submitButton.addEventListener('click', function () {
-                // 폼 데이터 수집
-                const formData = {
-                    title: document.getElementById('title').value,
-                    origin: {
-                        street: document.getElementById('street').value,
-                        city: document.getElementById('city').value,
-                        zipCode: document.getElementById('zipCode').value
-                    },
-                    price: parseFloat(document.getElementById('price').value), // 숫자로 변환
-                    categoryId: parseInt(document.getElementById('category').value) // 숫자로 변환
-                };
+		    submitButton.addEventListener('click', function () {
+		        // 폼 데이터 수집
+		        const formData = {
+		            title: document.getElementById('title').value,
+		            origin: {
+		                street: document.getElementById('street').value,
+		                city: document.getElementById('city').value,
+		                zipCode: document.getElementById('zipCode').value
+		            },
+		            price: parseFloat(document.getElementById('price').value), // 숫자로 변환
+		            categoryId: parseInt(document.getElementById('category').value) // 숫자로 변환
+		        };
 
-                console.log('Form Data:', formData); // 디버깅용 로그
+		        console.log('Form Data:', formData); // 디버깅용 로그
 
-                // AJAX 요청
-                fetch(editForm.getAttribute('action'), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert('수정이 완료되었습니다.');
-                        window.location.href = '/items'; // 수정 후 목록 페이지로 이동
-                    } else {
-                        return response.json().then(error => {
-                            throw new Error(error.message || '수정 중 오류가 발생했습니다.');
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('오류: ' + error.message);
-                });
-            });
-        });
+		        // 로딩 상태 표시
+		        submitButton.disabled = true;
+		        submitButton.textContent = '수정 중...';
+
+		        // AJAX 요청
+		        fetch(editForm.getAttribute('action'), {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		            },
+		            body: JSON.stringify(formData),
+		        })
+		        .then(response => {
+		            if (response.ok) {
+		                return response.text(); // 서버에서 반환된 메시지 읽기
+		            } else {
+		                return response.json().then(error => {
+		                    throw new Error(error.message || '수정 중 오류가 발생했습니다.');
+		                });
+		            }
+		        })
+		        .then(message => {
+		           alert('아이템이 성공적으로 수정되었습니다!');
+		            window.location.href = '/items'; // 수정 후 목록 페이지로 이동
+		        })
+		        .catch(error => {
+					console.error('Error:', error);
+					alert('아이템 등록에 실패했습니다.');
+		        })
+		        .finally(() => {
+		            // 로딩 상태 복원
+		            submitButton.disabled = false;
+		            submitButton.textContent = '수정';
+		        });
+		    });
+		});
     </script>
 </body>
 </html>

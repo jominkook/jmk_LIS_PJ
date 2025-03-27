@@ -73,11 +73,18 @@ public class ItemController {
         return "edit-item"; // edit-item.html 템플릿 반환
     }
 
-    // 수정 요청 처리
+//    // 수정 요청 처리(URL 형식)
+//    @PostMapping("/edit/{id}")
+//    public String updateItem(@PathVariable Long id, SaveItemReqDto reqDto) {
+//        itemService.updateItem(id, reqDto); // 아이템 수정
+//        return "redirect:/items"; // 수정 후 아이템 목록 페이지로 리다이렉트
+//    }
+    
+    // 수정 요청 처리(JSON)
     @PostMapping("/edit/{id}")
-    public String updateItem(@PathVariable Long id, SaveItemReqDto reqDto) {
+    public ResponseEntity<?> updateItem(@PathVariable Long id, @RequestBody SaveItemReqDto reqDto) {
         itemService.updateItem(id, reqDto); // 아이템 수정
-        return "redirect:/items"; // 수정 후 아이템 목록 페이지로 리다이렉트
+        return ResponseEntity.ok().build(); // 성공 응답 반환
     }
 
 }

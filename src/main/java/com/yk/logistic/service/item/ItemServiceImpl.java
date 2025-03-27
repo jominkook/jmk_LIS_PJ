@@ -47,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
 
         // DTO -> Entity 변환
         Item item = Item.builder()
-                .title(reqDto.getName())
+                .title(reqDto.getTitle())
                 .origin(reqDto.getOrigin()) // Address 객체로 처리
                 .price(reqDto.getPrice())
                 .status(ItemStatus.AVAILABLE) // 기본 상태: 판매 중
@@ -99,7 +99,7 @@ public class ItemServiceImpl implements ItemService {
 
         // 아이템 정보 업데이트
         findItem.updateItem(
-                reqDto.getName(),
+                reqDto.getTitle(),
                 reqDto.getOrigin(), // Address 객체로 처리
                 reqDto.getPrice(),
                 category

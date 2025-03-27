@@ -40,6 +40,9 @@
 						<li>
                             <button id="inputItems-button" class="btn btn-primary" style="margin-top: 8px;">판매상품등록</button>
                        </li>
+					    <li>
+					         <button id="chat-button" class="btn btn-primary" style="margin-top: 8px;">채팅</button>
+					    </li>
                         <li>
                            <button id="logout-button" class="btn btn-primary" style="margin-top: 8px;">Logout</button>
                        </li>
@@ -78,25 +81,31 @@
     <script src="custom-js/main.js"></script>
 	
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var itemsButton = document.getElementById('selectitems-button');
-            if (itemsButton) {
-                itemsButton.addEventListener('click', function() {
-                    window.location.href = '/items';
-                });
-            }
-        });
-    </script>
-	
-	<script>
-	        document.addEventListener('DOMContentLoaded', function() {
-	            var itemsButton = document.getElementById('inputItems-button');
-	            if (itemsButton) {
-	                itemsButton.addEventListener('click', function() {
-	                    window.location.href = '/items/register';
-	                });
-	            }
-	        });
+		document.addEventListener('DOMContentLoaded', function() {
+		        // 판매상품조회 버튼
+		        var itemsButton = document.getElementById('selectitems-button');
+		        if (itemsButton) {
+		            itemsButton.addEventListener('click', function() {
+		                window.location.href = '/items';
+		            });
+		        }
+
+		        // 판매상품등록 버튼
+		        var inputItemsButton = document.getElementById('inputItems-button');
+		        if (inputItemsButton) {
+		            inputItemsButton.addEventListener('click', function() {
+		                window.location.href = '/items/register';
+		            });
+		        }
+
+		        // 채팅 버튼
+		        var chatButton = document.getElementById('chat-button');
+		        if (chatButton) {
+		            chatButton.addEventListener('click', function() {
+		                window.location.href = '/chat';
+		            });
+		        }
+		    });
 	</script>
 </body>
 </html>

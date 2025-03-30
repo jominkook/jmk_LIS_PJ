@@ -7,7 +7,10 @@
     <script>
         let stompClient = null;
 
-        function connect(chatRoomId) {
+        // 서버에서 전달된 chatRoomId를 사용
+        const chatRoomId = /*[[${chatRoomId}]]*/ ''; // 서버에서 전달된 chatRoomId
+
+        function connect() {
             const socket = new SockJS('/ws');
             stompClient = Stomp.over(socket);
 
@@ -21,7 +24,7 @@
             });
         }
 
-        function sendMessage(chatRoomId) {
+        function sendMessage() {
             const messageContent = document.getElementById('message').value;
             const senderId = document.getElementById('senderId').value;
 
@@ -37,11 +40,14 @@
         }
 
         function showMessage(message) {
+			console.log("Received message:", message); // 메시지 구조 확인
             const chat = document.getElementById('chat');
             const messageElement = document.createElement('p');
             messageElement.textContent = message.senderName + ": " + message.message;
             chat.appendChild(messageElement);
         }
+
+        document.addEventListener('DOMContentLoaded', connect);
     </script>
 </head>
 <body>
@@ -49,6 +55,6 @@
     <div id="chat" style="border: 1px solid black; height: 300px; overflow-y: scroll;"></div>
     <input id="senderId" type="text" placeholder="Sender ID" />
     <input id="message" type="text" placeholder="Type a message" />
-    <button onclick="sendMessage(chatRoomId)">Send</button>
+    <button onclick="sendMessage()">Send</button>
 </body>
 </html>

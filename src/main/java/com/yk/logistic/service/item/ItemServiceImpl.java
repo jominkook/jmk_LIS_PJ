@@ -134,8 +134,9 @@ public class ItemServiceImpl implements ItemService {
                 item.getOrigin(),
                 item.getPrice(),
                 item.getStatus().name(),
-                item.getSeller().getName(),
-                item.getSeller().getEmail(), 
+                item.getSeller().getId(), // 판매자 ID 추가
+                item.getSeller().getName(), // 판매자 이름 추가
+                item.getSeller().getEmail(),
                 item.getCategory().getName(),
                 parentCategoryName // 부모 카테고리 이름 추가
         );

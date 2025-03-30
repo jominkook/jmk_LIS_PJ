@@ -41,4 +41,6 @@ public class ChatMessage {
     public void markAsRead() {
         this.isRead = true;
     }
+    
+
 }

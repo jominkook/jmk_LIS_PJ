@@ -1,20 +1,34 @@
 package com.yk.logistic.dto.item.response;
 
 import com.yk.logistic.domain.address.Address;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class ItemResDto {
-    private Long id; // 상품 ID
-    private String title; // 상품 제목
-    private Address origin; // 상품 위치
-    private int price; // 상품 가격
-    private String status; // 거래 상태
+    private Long id;
+    private String title;
+    private Address origin;
+    private int price;
+    private String status;
+    private Long sellerId; // 판매자 ID
     private String sellerName; // 판매자 이름
     private String sellerEmail; // 판매자 이메일
-    private String categoryName; // 카테고리 이름
-    private String parentCategoryName; // 부모 카테고리 이름
+    private String categoryName;
+    private String parentCategoryName;
+
+    // 생성자
+    public ItemResDto(Long id, String title, Address origin, int price, String status, 
+            Long sellerId, String sellerName, String sellerEmail, // 이메일 추가
+            String categoryName, String parentCategoryName) {
+		this.id = id;
+		this.title = title;
+		this.origin = origin;
+		this.price = price;
+		this.status = status;
+		this.sellerId = sellerId;
+		this.sellerName = sellerName;
+		this.sellerEmail = sellerEmail; // 이메일 설정
+		this.categoryName = categoryName;
+		this.parentCategoryName = parentCategoryName;
+	}
 }

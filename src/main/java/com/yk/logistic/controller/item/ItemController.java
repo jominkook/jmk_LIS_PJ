@@ -80,7 +80,7 @@ public class ItemController {
 //        return "redirect:/items"; // 수정 후 아이템 목록 페이지로 리다이렉트
 //    }
     
-    // 수정 요청 처리(JSON)
+    //수정 요청 처리(JSON)
     @PostMapping("/edit/{id}")
     public ResponseEntity<?> updateItem(@PathVariable Long id, @RequestBody SaveItemReqDto reqDto) {
         itemService.updateItem(id, reqDto); // 아이템 수정

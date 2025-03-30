@@ -14,8 +14,7 @@ import com.yk.logistic.domain.member.Member;
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 	// 특정 상품과 사용자 간의 채팅룸 조회
-	@Query("SELECT c FROM ChatRoom c WHERE c.seller = :seller AND c.buyer = :buyer AND c.item.id = :itemId")
-	Optional<ChatRoom> findBySellerAndBuyerAndItem(@Param("seller") Member seller, @Param("buyer") Member buyer, @Param("itemId") Long itemId);
+	Optional<ChatRoom> findChatRoomBySellerAndBuyerAndItemId(@Param("seller") Member seller, @Param("buyer") Member buyer, @Param("itemId") Long itemId);
 
     // 사용자가 참여 중인 채팅룸 목록 조회
     List<ChatRoom> findBySellerOrBuyer(Member seller, Member buyer);

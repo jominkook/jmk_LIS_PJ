@@ -44,7 +44,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(new ChatRoomResponseDto(chatRoom));
     }
 
- // 사용자가 참여 중인 채팅룸 목록 조회
+    // 사용자가 참여 중인 채팅룸 목록 조회
     @GetMapping
     public ResponseEntity<List<ChatRoomResponseDto>> getChatRooms() {
         // 현재 로그인된 사용자 정보 가져오기

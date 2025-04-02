@@ -5,56 +5,77 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <script>
-        let stompClient = null;
-
-        // 서버에서 전달된 chatRoomId를 사용
-        const chatRoomId = /*[[${chatRoomId}]]*/ ''; // 서버에서 전달된 chatRoomId
-
-        function connect() {
+        document.addEventListener('DOMContentLoaded', function () {
             const socket = new SockJS('/ws');
-            stompClient = Stomp.over(socket);
+            const stompClient = Stomp.over(socket);
+
+            // 서버에서 전달된 chatRoomId와 senderId를 사용
+            const chatRoomId = [[${chatRoomId}]]; // 서버에서 전달된 chatRoomId
+            const senderId = [[${senderId}]]; // 서버에서 전달된 senderId
+			//const senderName = [[${senderName}]]; 
+            console.log("Chat Room ID:", chatRoomId);
+            console.log("Sender ID:", senderId);
 
             stompClient.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
 
-                // 메시지 구독
+                // 채팅방 구독
                 stompClient.subscribe(`/topic/chatroom/${chatRoomId}`, function (message) {
-                    showMessage(JSON.parse(message.body));
+                    try {
+                        const parsedMessage = JSON.parse(message.body);
+                        console.log("Received message:", parsedMessage); // 메시지 구조 확인
+                        showMessage(parsedMessage);
+                    } catch (error) {
+                        console.error("Error parsing message:", error);
+                    }
                 });
             });
-        }
 
-        function sendMessage() {
-            const messageContent = document.getElementById('message').value;
-            const senderId = document.getElementById('senderId').value;
+            // 메시지 전송 함수
+            function sendMessage() {
+                const messageContent = document.getElementById('message').value;
 
-            if (messageContent && stompClient) {
-                const chatMessage = {
-                    senderId: senderId,
-                    chatRoomId: chatRoomId,
-                    message: messageContent
-                };
-                stompClient.send(`/app/chat/${chatRoomId}/sendMessage`, {}, JSON.stringify(chatMessage));
-                document.getElementById('message').value = '';
+                if (messageContent && stompClient) {
+                    const chatMessage = {
+						//senderName : senderName,
+                        senderId: senderId, // 서버에서 전달된 senderId 사용
+                        chatRoomId: chatRoomId, // 서버에서 전달된 chatRoomId 사용
+                        message: messageContent
+                    };
+                    console.log("Sending message:", chatMessage);
+                    stompClient.send(`/app/chat/${chatRoomId}/sendMessage`, {}, JSON.stringify(chatMessage));
+                    document.getElementById('message').value = '';
+                } else {
+                    console.warn("Message content is empty or Stomp client is not connected.");
+                }
             }
-        }
+
+            // 전송 버튼 클릭 이벤트 리스너
+            document.getElementById('sendButton').addEventListener('click', sendMessage);
+        });
 
         function showMessage(message) {
-			console.log("Received message:", message); // 메시지 구조 확인
+            console.log("Processing received message:", message); // 메시지 구조 확인
+
+            // senderName과 message가 존재하는지 확인하고 기본값 설정
+            const senderName = message.senderName || "Unknown Sender";
+            const messageContent = message.message || "No message content";
+
+            // 메시지를 화면에 추가
             const chat = document.getElementById('chat');
             const messageElement = document.createElement('p');
-            messageElement.textContent = message.senderName + ": " + message.message;
+            messageElement.textContent = `${senderName}: ${messageContent}`;
             chat.appendChild(messageElement);
-        }
 
-        document.addEventListener('DOMContentLoaded', connect);
+            // 스크롤을 최신 메시지로 이동
+            chat.scrollTop = chat.scrollHeight;
+        }
     </script>
 </head>
 <body>
     <h1>Chat Room</h1>
     <div id="chat" style="border: 1px solid black; height: 300px; overflow-y: scroll;"></div>
-    <input id="senderId" type="text" placeholder="Sender ID" />
     <input id="message" type="text" placeholder="Type a message" />
-    <button onclick="sendMessage()">Send</button>
+    <button id="sendButton">Send</button>
 </body>
 </html>

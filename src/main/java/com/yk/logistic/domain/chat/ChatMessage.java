@@ -32,6 +32,16 @@ public class ChatMessage {
 
     @Builder
     public ChatMessage(ChatRoom chatRoom, Member sender, String message) {
+        if (chatRoom == null) {
+            throw new IllegalArgumentException("ChatRoom cannot be null");
+        }
+        if (sender == null) {
+            throw new IllegalArgumentException("Sender cannot be null");
+        }
+        if (message == null || message.isEmpty()) {
+            throw new IllegalArgumentException("Message cannot be null or empty");
+        }
+
         this.chatRoom = chatRoom;
         this.sender = sender;
         this.message = message;
@@ -41,6 +51,13 @@ public class ChatMessage {
     public void markAsRead() {
         this.isRead = true;
     }
+    
+    // senderId 반환 메서드 추가
+    public Long getSenderId() {
+        return sender != null ? sender.getId() : null;
+    }
+    
+    
     
 
 }

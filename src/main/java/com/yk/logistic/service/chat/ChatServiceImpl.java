@@ -22,18 +22,18 @@ public class ChatServiceImpl implements ChatService {
     
  
 	public Long getOrCreateChatRoom(Long itemId, String buyerEmail) {
-        // 판매자와 구매자 정보 가져오기
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("아이템을 찾을 수 없습니다."));
-        Member seller = item.getSeller();
-        Member buyer = memberRepository.findByEmail(buyerEmail)
-                .orElseThrow(() -> new IllegalArgumentException("구매자를 찾을 수 없습니다."));
+		// 판매자와 구매자 정보 가져오기
+	    Item item = itemRepository.findById(itemId)
+	            .orElseThrow(() -> new IllegalArgumentException("아이템을 찾을 수 없습니다. ID: " + itemId));
+	    Member seller = item.getSeller();
+	    Member buyer = memberRepository.findByEmail(buyerEmail)
+	            .orElseThrow(() -> new IllegalArgumentException("구매자를 찾을 수 없습니다. 이메일: " + buyerEmail));
 
-        // 기존 채팅방 조회
-        Optional<ChatRoom> existingChatRoom = chatRoomRepository.findChatRoomBySellerAndBuyerAndItemId(seller, buyer, itemId);
-        if (existingChatRoom.isPresent()) {
-            return existingChatRoom.get().getId();
-        }
+	    // 기존 채팅방 조회 (아이템 ID만으로 조회)
+	    Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByItemId(itemId);
+	    if (existingChatRoom.isPresent()) {
+	        return existingChatRoom.get().getId();
+	    }
 
         // 채팅방 생성
         ChatRoom newChatRoom = ChatRoom.builder()

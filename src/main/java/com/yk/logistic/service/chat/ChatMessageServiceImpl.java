@@ -18,19 +18,30 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
+    
+    
 
     @Override
     public ChatMessage saveMessage(Long chatRoomId, Long senderId, String message) {
+    	
+    	 System.out.println("Saving message...");
+    	 System.out.println("chatRoomId: " + chatRoomId);
+    	 System.out.println("senderId: " + senderId);
+    	 System.out.println("message: " + message);
+    	    
+    	    
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
             .orElseThrow(() -> new IllegalArgumentException("채팅룸을 찾을 수 없습니다. ID: " + chatRoomId));
         Member sender = memberRepository.findById(senderId)
             .orElseThrow(() -> new IllegalArgumentException("발신자를 찾을 수 없습니다. ID: " + senderId));
+        
+        ChatMessage chatMessage = ChatMessage.builder()
+                .chatRoom(chatRoom)
+                .sender(sender)
+                .message(message)
+                .build();
 
-        return chatMessageRepository.save(ChatMessage.builder()
-            .chatRoom(chatRoom)
-            .sender(sender)
-            .message(message)
-            .build());
+        return chatMessageRepository.save(chatMessage);
     }
 
     @Override

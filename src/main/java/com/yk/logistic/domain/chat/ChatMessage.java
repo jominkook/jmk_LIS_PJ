@@ -46,6 +46,8 @@ public class ChatMessage {
         this.sender = sender;
         this.message = message;
     }
+    
+    
 
     // 메시지 읽음 상태 업데이트
     public void markAsRead() {
@@ -58,6 +60,4 @@ public class ChatMessage {
     }
     
     
-    
-
 }

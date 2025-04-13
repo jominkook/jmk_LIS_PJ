@@ -64,7 +64,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화
                 .build();
     }
-
+  
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

@@ -59,7 +59,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(responseDtos);
     }
     
- // 인증된 사용자 정보를 가져오는 메서드
+    // 인증된 사용자 정보를 가져오는 메서드
     private Member getAuthenticatedMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName(); // 인증된 사용자의 이메일

@@ -1,6 +1,8 @@
 package com.yk.logistic.domain.chat;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.yk.logistic.domain.member.Member;
 import jakarta.persistence.*;
@@ -28,7 +30,17 @@ public class ChatMessage {
 
     private String message; // 메시지 내용
     private LocalDateTime timestamp = LocalDateTime.now(); // 메시지 전송 시간
-    private boolean isRead = false; // 메시지 읽음 상태
+
+    @ManyToMany
+    @JoinTable(
+        name = "message_read_users",
+        joinColumns = @JoinColumn(name = "message_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<Member> readByUsers = new ArrayList<>(); // 메시지를 읽은 사용자 목록
+
+    @Column(name = "read_at")
+    private LocalDateTime readAt; // 메시지 읽은 시간
 
     @Builder
     public ChatMessage(ChatRoom chatRoom, Member sender, String message) {
@@ -46,18 +58,17 @@ public class ChatMessage {
         this.sender = sender;
         this.message = message;
     }
-    
-    
 
-    // 메시지 읽음 상태 업데이트
-    public void markAsRead() {
-        this.isRead = true;
+    // 메시지를 읽은 사용자 추가
+    public void markAsReadByUser(Member user) {
+        if (!readByUsers.contains(user)) {
+            readByUsers.add(user);
+            this.readAt = LocalDateTime.now(); // 읽은 시간 업데이트
+        }
     }
-    
+
     // senderId 반환 메서드 추가
     public Long getSenderId() {
         return sender != null ? sender.getId() : null;
     }
-    
-    
 }

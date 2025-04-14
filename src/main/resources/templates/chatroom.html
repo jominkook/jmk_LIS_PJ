@@ -54,22 +54,64 @@
             document.getElementById('sendButton').addEventListener('click', sendMessage);
         });
 
-        function showMessage(message) {
-            console.log("Processing received message:", message); // 메시지 구조 확인
+		function markMessageAsRead(messageId) {
+		    console.log(`Sending read request for message ID: ${messageId}`);
+		    fetch(`/chat-messages/${messageId}/read`, {
+		        method: 'PATCH',
+		        headers: {
+		            'Content-Type': 'application/json'
+		        },
+		        body: JSON.stringify(senderId) // 현재 사용자의 ID를 요청 본문으로 전달
+		    })
+		    .then(response => {
+		        if (!response.ok) {
+		            throw new Error(`HTTP error! status: ${response.status}`);
+		        }
+		        return response.json();
+		    })
+		    .then(updatedMessage => {
+		        console.log(`Message ${messageId} marked as read:`, updatedMessage);
+		        updateMessageReadStatus(updatedMessage);
+		    })
+		    .catch(error => {
+		        console.error(`Failed to mark message ${messageId} as read.`, error);
+		    });
+		}
 
-            // senderName과 message가 존재하는지 확인하고 기본값 설정
-            const senderName = message.senderName || "Unknown Sender";
-            const messageContent = message.message || "No message content";
+		function updateMessageReadStatus(message) {
+		    const chat = document.getElementById('chat');
+		    const messageElements = chat.getElementsByTagName('p');
+		    for (let element of messageElements) {
+		        if (element.dataset.messageId == message.id) {
+		            const readByText = message.readByUsers && message.readByUsers.length > 0
+		                ? ` (읽은 사람: ${message.readByUsers.join(", ")})`
+		                : " (안 읽음)";
+		            element.textContent = `${message.senderName}: ${message.message}${readByText}`;
+		        }
+		    }
+		}
 
-            // 메시지를 화면에 추가
-            const chat = document.getElementById('chat');
-            const messageElement = document.createElement('p');
-            messageElement.textContent = `${senderName}: ${messageContent}`;
-            chat.appendChild(messageElement);
+		// 메시지를 화면에 추가할 때 읽음 처리 요청
+		function showMessage(message) {
+		    console.log("Processing received message:", message);
 
-            // 스크롤을 최신 메시지로 이동
-            chat.scrollTop = chat.scrollHeight;
-        }
+		    const senderName = message.senderName || "Unknown Sender";
+		    const messageContent = message.message || "No message content";
+		    const readAt = message.readAt ? ` (읽은 시간: ${message.readAt})` : " (안 읽음)";
+
+		    const chat = document.getElementById('chat');
+		    const messageElement = document.createElement('p');
+		    messageElement.textContent = `${senderName}: ${messageContent}${readAt}`;
+		    messageElement.dataset.messageId = message.id; // 메시지 ID 추가
+		    chat.appendChild(messageElement);
+
+		    // 읽음 처리 요청
+		    if (message.id) {
+		        markMessageAsRead(message.id);
+		    }
+
+		    chat.scrollTop = chat.scrollHeight;
+		}
     </script>
 </head>
 <body>

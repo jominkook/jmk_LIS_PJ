@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yk.logistic.domain.item.Item;
 import com.yk.logistic.domain.member.Member;
 

@@ -66,6 +66,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     @Transactional
     @Override
     public ChatMessageResponseDto markAsRead(Long messageId, Long userId) {
+    	
+    	System.out.println("Starting markAsRead method...");
+        System.out.println("messageId: " + messageId + ", userId: " + userId);
+        
         // 메시지 조회
         ChatMessage message = chatMessageRepository.findById(messageId)
             .orElseThrow(() -> new IllegalArgumentException("메시지를 찾을 수 없습니다. ID: " + messageId));
@@ -73,7 +77,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         // 사용자 조회
         Member user = memberRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID: " + userId));
-        
+           
         // 메시지를 읽은 사용자 추가
         message.markAsReadByUser(user);
         
@@ -83,17 +87,30 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         // 읽음 처리된 메시지를 DTO로 변환하여 반환
         return new ChatMessageResponseDto(message);
     }
+    
+    public Long getRecipientId(String chatRoomId, Long senderId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(Long.parseLong(chatRoomId))
+            .orElseThrow(() -> new IllegalArgumentException("채팅방을 찾을 수 없습니다. ID: " + chatRoomId));
+
+        // 채팅방의 판매자와 구매자 중 senderId가 아닌 사용자를 반환
+        if (chatRoom.getSeller().getId().equals(senderId)) {
+            return chatRoom.getBuyer().getId();
+        } else {
+            return chatRoom.getSeller().getId();
+        }
+    }
 
     // ChatMessage 엔티티를 DTO로 변환하는 transform 메서드
     private ChatMessageResponseDto transform(ChatMessage chatMessage) {
         return new ChatMessageResponseDto(
             chatMessage.getId(),
             chatMessage.getSender() != null ? chatMessage.getSender().getName() : "Unknown Sender",
+            chatMessage.getSender() != null ? chatMessage.getSender().getId() : null, // senderId 추가
             chatMessage.getMessage(),
             chatMessage.getTimestamp(),
             !chatMessage.getReadByUsers().isEmpty(), // 읽음 상태: 읽은 사용자가 있으면 true
             chatMessage.getReadByUsers().stream()
-                .map(member -> member.getName()) // 읽은 사용자 이름 목록 추출
+                .map(Member::getName) // 읽은 사용자 이름 목록 추출
                 .collect(Collectors.toList())
         );
     }

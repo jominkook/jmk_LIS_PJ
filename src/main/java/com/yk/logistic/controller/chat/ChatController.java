@@ -17,6 +17,8 @@ import com.yk.logistic.repository.chat.ChatRoomRepository;
 import com.yk.logistic.repository.member.MemberRepository;
 import com.yk.logistic.service.chat.ChatMessageService;
 import com.yk.logistic.service.chat.ChatService;
+import com.yk.logistic.service.notification.NotificationService;
+
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -26,6 +28,7 @@ public class ChatController {
     private final ChatMessageService chatMessageService;
     private final MemberRepository memberRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final NotificationService notificationService;
     
     @MessageMapping("/chat/{chatRoomId}/sendMessage")
     @SendTo("/topic/chatroom/{chatRoomId}")
@@ -55,6 +58,12 @@ public class ChatController {
         // 저장된 메시지를 기반으로 DTO 생성
         ChatMessageResponseDto responseDto = new ChatMessageResponseDto(savedMessage);
         //System.out.println("Sending WebSocket message: " + responseDto); // 로그로 확인
+        
+        // 알림 전송 (판매자에게)
+        Long recipientId = chatMessageService.getRecipientId(chatRoomId, chatMessageRequestDto.getSenderId());
+        notificationService.sendNotification(recipientId, "새로운 채팅 메시지가 도착했습니다!");
+        
+        
         return responseDto; // 메시지를 반환하여 클라이언트로 브로드캐스트
     }
 

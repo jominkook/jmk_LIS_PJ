@@ -11,6 +11,7 @@ import com.yk.logistic.domain.member.Member;
 public class ChatMessageResponseDto {
     private Long id;
     private String senderName;
+    private Long senderId; // 추가된 필드
     private String message;
     private LocalDateTime timestamp;
     private boolean isRead; // 읽음 상태
@@ -21,22 +22,26 @@ public class ChatMessageResponseDto {
     public ChatMessageResponseDto(ChatMessage chatMessage) {
         this.id = chatMessage.getId();
         this.senderName = chatMessage.getSender() != null ? chatMessage.getSender().getName() : "Unknown Sender";
+        this.senderId = chatMessage.getSenderId(); // senderId 설정
         this.message = chatMessage.getMessage();
         this.timestamp = chatMessage.getTimestamp();
         this.isRead = !chatMessage.getReadByUsers().isEmpty(); // 읽은 사용자가 있으면 true
         this.readAt = chatMessage.getReadAt();
-        this.readByUsers = chatMessage.getReadByUsers().stream()
-            .map(Member::getName) // Member의 이름만 추출
-            .collect(Collectors.toList());
+        this.readByUsers = chatMessage.getReadByUsers() != null
+            ? chatMessage.getReadByUsers().stream()
+                .map(Member::getName)
+                .collect(Collectors.toList())
+            : List.of();
 
         // 디버깅 로그
-        System.out.println("ChatMessageResponseDto created: ID=" + this.id + ", isRead=" + this.isRead + ", readByUsers=" + this.readByUsers);
+        System.out.println("ChatMessageResponseDto created: ID=" + this.id + ", senderId=" + this.senderId + ", isRead=" + this.isRead + ", readByUsers=" + this.readByUsers);
     }
 
     // 필요한 매개변수를 받는 생성자
-    public ChatMessageResponseDto(Long id, String senderName, String message, LocalDateTime timestamp, boolean isRead, List<String> readByUsers) {
+    public ChatMessageResponseDto(Long id, String senderName, Long senderId, String message, LocalDateTime timestamp, boolean isRead, List<String> readByUsers) {
         this.id = id;
         this.senderName = senderName;
+        this.senderId = senderId; // 추가된 필드
         this.message = message;
         this.timestamp = timestamp;
         this.isRead = isRead;

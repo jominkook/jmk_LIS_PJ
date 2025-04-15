@@ -10,4 +10,5 @@ public interface ChatMessageService {
     ChatMessage saveMessage(Long chatRoomId, Long senderId, String message);
     List<ChatMessageResponseDto> findMessages(Long chatRoomId);
     ChatMessageResponseDto markAsRead(Long messageId, Long userId);
+    public Long getRecipientId(String chatRoomId, Long senderId);
 }

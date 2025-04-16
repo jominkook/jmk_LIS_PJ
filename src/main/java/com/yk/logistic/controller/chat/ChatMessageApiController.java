@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/chat-messages")
+@RequestMapping("/api/chat-messages")
 @RequiredArgsConstructor
-public class ChatMessageController {
+public class ChatMessageApiController {
     private final ChatMessageService chatMessageService;
 
     // 특정 채팅룸의 메시지 조회

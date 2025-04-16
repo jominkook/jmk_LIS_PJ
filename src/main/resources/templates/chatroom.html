@@ -4,6 +4,7 @@
     <title>Chat Room</title>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+	
     <script>
 		let senderId; 
 		let chatRoomId; 
@@ -59,7 +60,7 @@
 		function markMessageAsRead(messageId) {
 		        console.log(`Sending read request for message ID: ${messageId}`);
 				console.log(`Sender ID being sent: ${senderId}`); // 디버깅 로그 추가
-		        fetch(`/chat-messages/${messageId}/read`, {
+		        fetch(`/api/chat-messages/${messageId}/read`, {
 		            method: 'PATCH',
 		            headers: {
 		                'Content-Type': 'application/json'

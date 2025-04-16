@@ -43,22 +43,23 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션이 필요할 때 생성
                     )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/items/register").authenticated()
+                        .requestMatchers("/view/login", "/view/signup", "/api/signup").permitAll() // 로그인 및 회원가입 경로 허용
+                        .requestMatchers("/api/**").authenticated() // API 요청은 인증 필요
+                        .requestMatchers("/view/**").authenticated() // /view/** 경로는 인증 필요
                         .anyRequest().permitAll()
                 )
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .usernameParameter("useremail")
-                        .passwordParameter("password")
-                        .defaultSuccessUrl("/items/register", true)
+                        .loginPage("/view/login") // 사용자 정의 로그인 페이지
+                        .loginProcessingUrl("/api/login") // 로그인 처리 URL
+                        .usernameParameter("useremail") // useremail
+                        .passwordParameter("password") //  password 
+                        .defaultSuccessUrl("/view/home", true) // 로그인 성공 후 리다이렉트
+                        .failureUrl("/view/login?error=true") // 로그인 실패 시 리다이렉트
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
-                        //.invalidateHttpSession(true)
-                        .invalidateHttpSession(false)
+                		.logoutUrl("/api/logout")
+                        .logoutSuccessUrl("/view/login")
                         .permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화

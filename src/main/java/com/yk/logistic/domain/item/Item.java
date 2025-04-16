@@ -3,8 +3,6 @@ package com.yk.logistic.domain.item;
 import com.yk.logistic.domain.address.Address;
 import com.yk.logistic.domain.category.Category;
 import com.yk.logistic.domain.member.Member;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

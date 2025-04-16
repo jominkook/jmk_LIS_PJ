@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h3>아이템 정보</h3>
-                    <form id="register-item-form" method="post" action="/items/register">
+                    <form id="register-item-form" method="post" action="/api/items/register">
                         <div class="form-group">
 							<label for="title">이름</label>
 							<input id="title" name="title" class="form-control" placeholder="이름" type="text" required>
@@ -76,7 +76,7 @@
 
 		    console.log('Form Data:', formData); // 디버깅용 로그
 
-		    fetch('http://localhost:8080/items/register', {
+		    fetch('http://localhost:8080/api/items/register', {
 		        method: 'POST',
 		        headers: {
 		            'Content-Type': 'application/json'
@@ -92,7 +92,7 @@
 		    })
 		    .then(data => {
 		        alert('아이템이 성공적으로 등록되었습니다!');
-		        window.location.href = '/items';
+		        window.location.href = '/view/items';
 		    })
 		    .catch(error => {
 		        console.error('Error:', error);

@@ -50,7 +50,7 @@
                 success: function(response) {
                     // 로그인 성공 시 처리
                     alert('로그인 성공!');
-                    window.location.href = '/home'; // 예시: 대시보드 페이지로 이동
+                    window.location.href = '/view/home'; // 예시: 대시보드 페이지로 이동
                 },
                 error: function(error) {
                     // 로그인 실패 시 처리
@@ -72,7 +72,7 @@
                 success: function(response) {
                     // 회원가입 성공 시 처리
                     alert('회원가입 성공!');
-                    window.location.href = '/login'; // 예시: 환영 페이지로 이동
+                    window.location.href = '/view/login'; // 예시: 환영 페이지로 이동
                 },
                 error: function(error) {
                     // 회원가입 실패 시 처리

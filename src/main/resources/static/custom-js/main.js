@@ -320,13 +320,13 @@
         // Logout button AJAX
         document.getElementById('logout-button').addEventListener('click', function() {
             $.ajax({
-                url: '/logout',
+                url: '/api/logout',
                 type: 'POST',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
                 },
                 success: function() {
-                    window.location.href = '/login';
+                    window.location.href = '/api/login';
                 },
                 error: function() {
                     alert('Logout failed');

@@ -56,6 +56,5 @@ public class DataInitializer implements CommandLineRunner {
         Category furniture = new Category("가구", null);
         categoryRepository.save(furniture);
 
-
     }
 }

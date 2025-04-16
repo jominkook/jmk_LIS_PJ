@@ -6,7 +6,8 @@
 </head>
 <body>
     <h1>아이템 수정</h1>
-    <form id="editForm" th:action="@{/items/edit/{id}(id=${item.id})}" method="post">
+    <form id="editForm" th:action="@{/api/items/edit/{id}(id=${item.id})}" method="post">
+		<input type="hidden" name="_method" value="PUT">
         <label for="title">이름:</label>
         <input type="text" id="title" name="title" th:value="${item.title}" required><br>
 
@@ -58,7 +59,7 @@
 
 		        // AJAX 요청
 		        fetch(editForm.getAttribute('action'), {
-		            method: 'POST',
+		            method: 'PUT',
 		            headers: {
 		                'Content-Type': 'application/json',
 		            },
@@ -75,7 +76,7 @@
 		        })
 		        .then(message => {
 		           alert('아이템이 성공적으로 수정되었습니다!');
-		            window.location.href = '/items'; // 수정 후 목록 페이지로 이동
+		            window.location.href = '/view/items'; // 수정 후 목록 페이지로 이동
 		        })
 		        .catch(error => {
 					console.error('Error:', error);

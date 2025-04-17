@@ -1,5 +1,6 @@
 package com.yk.logistic.controller.item;
 
+
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -25,16 +26,16 @@ public class ItemViewController {
 	@GetMapping("/register")
     public String showRegisterForm(Model model) {
 		model.addAttribute("categories", categoryService.findChildCategories());
-        return "register-item"; // register-item.html 템플릿을 반환합니다.
+        return "register-item"; // register-item.html 템플릿을 반환.
     }
-	 
+	
 	@GetMapping
 	public String findItemList(Model model) {
 	    List<ItemResDto> items = itemService.findAllItems();
 	    model.addAttribute("items", items);
-	    return "items"; // items.html 템플릿을 반환합니다.
+	    return "items"; // items.html 템플릿을 반환.
 	}
-	   
+	 
 	@GetMapping("/edit/{id}")
 	public String showEditForm(@PathVariable Long id, Model model) {
 	    ItemResDto item = itemService.findItem(id); // 수정할 아이템 정보 가져오기

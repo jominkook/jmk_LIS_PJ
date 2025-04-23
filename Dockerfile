@@ -1,3 +1,4 @@
+###
 # 1. OpenJDK 이미지를 기반으로 사용
 FROM openjdk:17-jdk-slim
 

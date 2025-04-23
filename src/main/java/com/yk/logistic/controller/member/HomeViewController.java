@@ -21,6 +21,6 @@ public class HomeViewController {
 
         model.addAttribute("username", username);
         model.addAttribute("userId", userId);
-        return "home"; 
+        return "index"; 
     }
 }

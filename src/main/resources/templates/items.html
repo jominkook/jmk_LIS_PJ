@@ -18,12 +18,31 @@
             <p>가격: <span th:text="${item.price}">Item Price</span> 원</p>
             <p>카테고리: <span th:text="${item.categoryName != null ? item.categoryName : 'N/A'}">Category Name</span></p>
             <p>부모 카테고리: <span th:text="${item.parentCategoryName != null ? item.parentCategoryName : '없음'}">Parent Category Name</span></p>
+            
             <!-- 수정 버튼: 본인이 작성한 아이템에만 표시 -->
-			<button th:if="${item.sellerEmail != null and #authentication != null and item.sellerEmail == #authentication.name}" 
-			                   class="btn btn-primary edit-button" style="margin-top: 8px;" 
-			                   th:attr="data-id=${item.id}">수정</button>
-		    <button class="btn btn-primary chat-button" style="margin-top: 8px;" 
-		            th:attr="data-item-id=${item.id}">채팅</button>
+            <button th:if="${item.sellerEmail != null and #authentication != null and item.sellerEmail == #authentication.name}" 
+                               class="btn btn-primary edit-button" style="margin-top: 8px;" 
+                               th:attr="data-id=${item.id}">수정</button>
+            <button class="btn btn-primary chat-button" style="margin-top: 8px;" 
+                    th:attr="data-item-id=${item.id}">채팅</button>
+                    
+            <!-- 리뷰 조회 -->
+            <div>
+                <h4>리뷰</h4>
+                <ul id="reviews-${item.id}">
+                    <!-- 리뷰 목록이 동적으로 추가됩니다 -->
+                </ul>
+                <button class="btn btn-secondary load-reviews-button" style="margin-top: 8px;" 
+                        th:attr="data-item-id=${item.id}">리뷰 보기</button>
+            </div>
+
+			<!-- 리뷰 등록 페이지로 이동 -->
+			<div>
+				<button class="btn btn-primary" style="margin-top: 8px;" 
+				            th:attr="onclick='window.location.href=\'/reviews/register?itemId=' + ${item.id} + '&revieweeId=' + ${item.sellerId} + '\''">
+				        리뷰 등록
+				</button>
+			</div>
         </li>
     </ul>
     <p th:if="${#lists.isEmpty(items)}">등록된 아이템이 없습니다.</p>
@@ -40,15 +59,53 @@
                 window.location.href = '/view/items/edit/' + itemId; // 수정 페이지로 이동
             });
         });
-		
-		// 모든 채팅 버튼에 클릭 이벤트 추가
-	    const chatButtons = document.querySelectorAll('.chat-button');
-	    chatButtons.forEach(button => {
-	        button.addEventListener('click', function () {
-	            const itemId = this.getAttribute('data-item-id'); // data-item-id 속성에서 아이템 ID 가져오기
-	            window.location.href = `/view/chat/${itemId}`; // 채팅방 페이지로 이동
-	        });
-	    });
+        
+        // 모든 채팅 버튼에 클릭 이벤트 추가
+        const chatButtons = document.querySelectorAll('.chat-button');
+        chatButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.getAttribute('data-item-id'); // data-item-id 속성에서 아이템 ID 가져오기
+                window.location.href = `/view/chat/${itemId}`; // 채팅방 페이지로 이동
+            });
+        });
     });
+    
+    document.addEventListener('DOMContentLoaded', function () {
+            // 리뷰 보기 버튼 이벤트
+            const loadReviewButtons = document.querySelectorAll('.load-reviews-button');
+            loadReviewButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const itemId = this.getAttribute('data-item-id');
+                    loadReviews(itemId);
+                });
+            });
+
+            // 리뷰 조회 함수
+            function loadReviews(itemId) {
+                fetch(`http://localhost:8080/api/items/${itemId}/reviews`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`리뷰를 가져오는 데 실패했습니다. 상태 코드: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(reviews => {
+                        const reviewsContainer = document.getElementById(`reviews-${itemId}`);
+                        reviewsContainer.innerHTML = '';
+                        reviews.forEach(review => {
+                            const reviewElement = document.createElement('li');
+                            reviewElement.innerHTML = `
+                                <p><strong>평점:</strong> ${review.rating}점</p>
+                                <p><strong>내용:</strong> ${review.content}</p>
+                            `;
+                            reviewsContainer.appendChild(reviewElement);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('리뷰를 불러오는 데 실패했습니다.');
+                    });
+            }
+        });
 </script>
 </html>

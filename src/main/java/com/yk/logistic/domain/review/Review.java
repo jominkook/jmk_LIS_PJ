@@ -1,44 +1,43 @@
 package com.yk.logistic.domain.review;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.yk.logistic.domain.item.Item;
 import com.yk.logistic.domain.member.Member;
+import jakarta.persistence.*;
+import lombok.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "review")
 public class Review {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewer_id")
-    private Member reviewer; // 리뷰 작성자
+    @JoinColumn(name = "reviewee_id", nullable = false)
+    @JsonIgnore // JSON 직렬화에서 제외
+    private Member reviewee;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewee_id")
-    private Member reviewee; // 리뷰 대상자
+    @JoinColumn(name = "item_id", nullable = false)
+    @JsonIgnore // JSON 직렬화에서 제외
+    private Item item;
 
-    private String content; // 리뷰 내용
-    private int rating; // 평점 (1~5)
+    @Column(nullable = false, length = 1000)
+    private String content;
+
+    @Column(nullable = false)
+    private int rating;
 
     @Builder
-    public Review(Member reviewer, Member reviewee, String content, int rating) {
-        this.reviewer = reviewer;
+    public Review(Member reviewee, Item item, String content, int rating) {
         this.reviewee = reviewee;
+        this.item = item;
         this.content = content;
         this.rating = rating;
     }

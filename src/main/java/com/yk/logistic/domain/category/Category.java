@@ -1,5 +1,6 @@
 package com.yk.logistic.domain.category;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +30,14 @@ public class Category {
     @Column(name = "category_id")
     private Long id;
 
+    @Column(name = "category_name", nullable = false)
     private String name; // 카테고리 이름
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     @JsonIgnore // 순환 참조 방지
     private Category parent; // 부모 카테고리
+    
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore // 순환 참조 방지

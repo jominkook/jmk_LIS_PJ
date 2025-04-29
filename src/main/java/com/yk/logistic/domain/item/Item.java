@@ -1,8 +1,14 @@
 package com.yk.logistic.domain.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.yk.logistic.domain.address.Address;
 import com.yk.logistic.domain.category.Category;
 import com.yk.logistic.domain.member.Member;
+import com.yk.logistic.domain.review.Review;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,6 +19,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -45,6 +52,9 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category; // 카테고리
+    
+    @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>(); // 아이템에 대한 리뷰 리스트
 
     @Builder
     public Item(String title, Address origin, int price, ItemStatus status, Member seller, Category category) {

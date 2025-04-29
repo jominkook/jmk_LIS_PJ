@@ -19,7 +19,6 @@
 //
 //    private final MemberRepository memberRepository;
 //    private final CategoryRepository categoryRepository;
-//    //private final StockRepository stockRepository;
 //    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 //
 //    @Override
@@ -44,17 +43,40 @@
 //        memberRepository.save(seller);
 //
 //        // 샘플 카테고리 데이터 생성
-//        Category electronics = new Category("전자제품", null);
+//        Category electronics = Category.builder()
+//                .name("전자제품")
+//                .build();
 //        categoryRepository.save(electronics);
 //
-//        Category computers = new Category("컴퓨터", electronics);
+//        Category computers = Category.builder()
+//                .name("컴퓨터")
+//                .parent(electronics) // 부모 카테고리 설정
+//                .build();
 //        categoryRepository.save(computers);
 //
-//        Category smartphones = new Category("스마트폰", electronics);
+//        Category smartphones = Category.builder()
+//                .name("스마트폰")
+//                .parent(electronics) // 부모 카테고리 설정
+//                .build();
 //        categoryRepository.save(smartphones);
 //
-//        Category furniture = new Category("가구", null);
+//        Category furniture = Category.builder()
+//                .name("가구")
+//                .build();
 //        categoryRepository.save(furniture);
 //
+//        Category chairs = Category.builder()
+//                .name("의자")
+//                .parent(furniture) // 부모 카테고리 설정
+//                .build();
+//        categoryRepository.save(chairs);
+//
+//        Category tables = Category.builder()
+//                .name("테이블")
+//                .parent(furniture) // 부모 카테고리 설정
+//                .build();
+//        categoryRepository.save(tables);
+//
+//        System.out.println("샘플 데이터가 성공적으로 저장되었습니다.");
 //    }
 //}

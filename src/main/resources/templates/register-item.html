@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h3>아이템 정보</h3>
-                    <form id="register-item-form" method="post" action="/api/items/register">
+                    <form id="register-item-form" method="post" action="/api/items/register" enctype="multipart/form-data">
                         <div class="form-group">
 							<label for="title">이름</label>
 							<input id="title" name="title" class="form-control" placeholder="이름" type="text" required>
@@ -51,6 +51,12 @@
 						                th:text="${category.name}"></option>
 						    </select>
 						</div>
+						
+						<div class="form-group">
+					       <label for="image">사진</label>
+					       <input id="image" name="image" class="form-control" type="file" accept="image/*" required>
+					   </div>
+						   
                         <div class="form-group">
                             <input class="btn btn-primary btn-lg" value="아이템 등록" type="submit">
                         </div>
@@ -63,25 +69,33 @@
     <script>
 		document.getElementById('register-item-form').addEventListener('submit', function(event) {
 		    event.preventDefault();
-		    var formData = {
-		        title: document.getElementById('title').value,
-		        origin: {
-		            street: document.getElementById('street').value,
-		            city: document.getElementById('city').value,
-		            zipCode: document.getElementById('zipCode').value
-		        },
-		        price: parseInt(document.getElementById('price').value),
-		        categoryId: parseInt(document.getElementById('category').value)
+
+		    // FormData 객체 생성
+		    const formData = new FormData();
+
+		    // JSON 형식의 origin 객체 생성
+		    const origin = {
+		        street: document.getElementById('street').value,
+		        city: document.getElementById('city').value,
+		        zipCode: document.getElementById('zipCode').value
 		    };
 
-		    console.log('Form Data:', formData); // 디버깅용 로그
+		    // FormData에 데이터 추가
+		    formData.append('title', document.getElementById('title').value);
+		    formData.append('origin', JSON.stringify(origin)); // origin 객체를 JSON 문자열로 추가
+		    formData.append('price', parseInt(document.getElementById('price').value));
+		    formData.append('categoryId', parseInt(document.getElementById('category').value));
+		    formData.append('image', document.getElementById('image').files[0]); // 파일 추가
 
+		    // FormData 디버깅
+		    for (let pair of formData.entries()) {
+		        console.log(pair[0] + ': ' + pair[1]);
+		    }
+
+		    // Fetch API로 데이터 전송
 		    fetch('http://localhost:8080/api/items/register', {
 		        method: 'POST',
-		        headers: {
-		            'Content-Type': 'application/json'
-		        },
-		        body: JSON.stringify(formData),
+		        body: formData, // FormData 객체 전송
 		        credentials: 'include' // 세션 쿠키 포함
 		    })
 		    .then(response => {

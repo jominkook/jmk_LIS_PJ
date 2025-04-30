@@ -26,9 +26,9 @@ public class ChatController {
     @MessageMapping("/chat/{chatRoomId}/sendMessage")
     @SendTo("/topic/chatroom/{chatRoomId}")
     public ChatMessageResponseDto sendMessage(@DestinationVariable String chatRoomId, ChatMessageRequestDto chatMessageRequestDto) {
-        System.out.println("chatRoomId: " + chatRoomId);
-        System.out.println("Sender ID: " + chatMessageRequestDto.getSenderId());
-        System.out.println("Message: " + chatMessageRequestDto.getMessage());
+//        System.out.println("chatRoomId: " + chatRoomId);
+//        System.out.println("Sender ID: " + chatMessageRequestDto.getSenderId());
+//        System.out.println("Message: " + chatMessageRequestDto.getMessage());
 
         // senderId를 기반으로 Member 객체 조회
         Member sender = memberRepository.findById(chatMessageRequestDto.getSenderId())

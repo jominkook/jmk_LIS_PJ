@@ -9,5 +9,5 @@ import com.yk.logistic.dto.review.ReviewResponse;
 public interface ReviewService {
 	public Review addReview(Long itemId, ReviewRequest reviewRequest);
 	
-	//public List<ReviewResponse> getReviewsByItemId(Long itemId);
+	public List<ReviewResponse> getReviewsByItemId(Long itemId);
 }

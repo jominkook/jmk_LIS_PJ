@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.yk.logistic.domain.address.Address;
 import com.yk.logistic.domain.category.Category;
 import com.yk.logistic.domain.item.Item;
+import com.yk.logistic.domain.item.ItemImage;
 import com.yk.logistic.domain.item.ItemStatus;
 import com.yk.logistic.domain.member.Member;
 import com.yk.logistic.domain.member.MemberRole;
@@ -57,6 +58,15 @@ public class ItemServiceImpl implements ItemService {
 
         // 아이템 정보 저장
         itemRepository.save(item);
+        
+     // 단일 이미지 저장
+        if (reqDto.getImageUrls() != null && !reqDto.getImageUrls().isEmpty()) {
+            ItemImage itemImage = ItemImage.builder()
+                    .imageUrl(reqDto.getImageUrls()) // S3에서 반환된 URL
+                    .item(item) // 연관된 Item 엔티티
+                    .build();
+            item.getImages().add(itemImage); // Item과 연관된 이미지 추가
+        }
 
         // 저장된 Item -> DTO 변환
         return transformDomain(item);
@@ -96,13 +106,17 @@ public class ItemServiceImpl implements ItemService {
         // 카테고리 조회
         Category category = categoryRepository.findById(reqDto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID: " + reqDto.getCategoryId()));
+        
+        // 상태값 변환
+        ItemStatus status = reqDto.getStatus() != null ? ItemStatus.valueOf(reqDto.getStatus()) : null;
 
         // 아이템 정보 업데이트
         findItem.updateItem(
                 reqDto.getTitle(),
                 reqDto.getOrigin(), // Address 객체로 처리
                 reqDto.getPrice(),
-                category
+                category,
+                status // 상태값 업데이트
         );
     }
 
@@ -127,6 +141,8 @@ public class ItemServiceImpl implements ItemService {
         String parentCategoryName = item.getCategory().getParent() != null
                 ? item.getCategory().getParent().getName()
                 : "없음"; // 부모 카테고리가 없을 경우 "없음"으로 설정
+     // 아이템의 첫 번째 이미지 URL 가져오기
+        String imageUrl = item.getImages().isEmpty() ? null : item.getImages().get(0).getImageUrl();
 
         return new ItemResDto(
                 item.getId(),
@@ -138,7 +154,8 @@ public class ItemServiceImpl implements ItemService {
                 item.getSeller().getName(), // 판매자 이름 추가
                 item.getSeller().getEmail(),
                 item.getCategory().getName(),
-                parentCategoryName // 부모 카테고리 이름 추가
+                parentCategoryName, // 부모 카테고리 이름 추가
+                imageUrl // 이미지 URL 추가
         );
     }
 

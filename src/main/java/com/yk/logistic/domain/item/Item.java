@@ -43,7 +43,7 @@ public class Item {
     private int price; // 상품 가격
 
     @Enumerated(EnumType.STRING)
-    private ItemStatus status; // 거래 상태 (판매 중, 예약 중, 거래 완료)
+    private ItemStatus status = ItemStatus.AVAILABLE; // 기본값 설정 // 거래 상태 (판매 중, 예약 중, 거래 완료)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
@@ -55,22 +55,30 @@ public class Item {
     
     @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>(); // 아이템에 대한 리뷰 리스트
+    
+    @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private List<ItemImage> images = new ArrayList<>(); // 이미지 리스트
 
     @Builder
     public Item(String title, Address origin, int price, ItemStatus status, Member seller, Category category) {
         this.title = title;
         this.origin = origin;
         this.price = price;
-        this.status = status;
+        this.status = status != null ? status : ItemStatus.AVAILABLE;
         this.seller = seller;
         this.category = category;
     }
 
     // 상품 정보 업데이트 메서드
-    public void updateItem(String title, Address origin, int price, Category category) {
+    public void updateItem(String title, Address origin, int price, Category category, ItemStatus status) {
         this.title = title;
         this.origin = origin;
         this.price = price;
         this.category = category;
+
+        // 상태값 업데이트
+        if (status != null) {
+            this.status = status;
+        }
     }
 }

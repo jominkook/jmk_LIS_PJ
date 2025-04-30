@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ReviewViewController {
 
     @GetMapping("/register")
-    public String showReviewForm(@RequestParam Long itemId, @RequestParam(required = false) Long revieweeId, Model model) {
+    public String ReviewRegisterForm(@RequestParam Long itemId, @RequestParam(required = false) Long revieweeId, Model model) {
         model.addAttribute("itemId", itemId); // 아이템 ID를 모델에 추가
         model.addAttribute("revieweeId", revieweeId); // 리뷰 대상자 ID를 모델에 추가
         return "register-review"; // templates/register-review.html을 반환

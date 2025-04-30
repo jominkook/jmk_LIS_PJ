@@ -29,6 +29,14 @@
                     th:value="${category.id}" 
                     th:text="${category.name}"></option>
         </select><br>
+		
+		<!-- 상태값 변경 추가 -->
+        <label for="status">상태:</label>
+        <select id="status" name="status" required>
+            <option value="AVAILABLE" th:selected="${item.status == 'AVAILABLE'}">판매 중</option>
+            <option value="RESERVED" th:selected="${item.status == 'RESERVED'}">예약 중</option>
+            <option value="SOLD" th:selected="${item.status == 'SOLD'}">거래 완료</option>
+        </select><br>
 
         <button type="button" id="submitButton" class="btn btn-primary">수정</button>
     </form>
@@ -48,7 +56,8 @@
 		                zipCode: document.getElementById('zipCode').value
 		            },
 		            price: parseFloat(document.getElementById('price').value), // 숫자로 변환
-		            categoryId: parseInt(document.getElementById('category').value) // 숫자로 변환
+		            categoryId: parseInt(document.getElementById('category').value), // 숫자로 변환
+					status: document.getElementById('status').value // 상태값 추가
 		        };
 
 		        console.log('Form Data:', formData); // 디버깅용 로그

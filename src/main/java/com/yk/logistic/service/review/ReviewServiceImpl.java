@@ -44,19 +44,20 @@ public class ReviewServiceImpl implements ReviewService {
 	    return reviewRepository.save(review);
 	}
 	
-//	public List<ReviewResponse> getReviewsByItemId(Long itemId) {
-//	    // 아이템 ID로 리뷰 목록 조회
-//	    List<Review> reviews = reviewRepository.findByItem_Id(itemId);
-//
-//	    // 리뷰를 ReviewResponse DTO로 변환
-//	    return reviews.stream()
-//	            .map(review -> new ReviewResponse(
-//	                    review.getId(),                  // 리뷰 ID
-//	                    review.getItem().getTitle(),     // 아이템 이름
-//	                    review.getRating(),              // 평점
-//	                    review.getContent()              // 리뷰 내용
-//	            ))
-//	            .collect(Collectors.toList());
-//	}
+	public List<ReviewResponse> getReviewsByItemId(Long itemId) {
+		
+	    // 아이템 ID로 리뷰 목록 조회
+	    List<Review> reviews = reviewRepository.findByItem_Id(itemId);
+
+	    // 리뷰를 ReviewResponse DTO로 변환
+	    return reviews.stream()
+	            .map(review -> new ReviewResponse(
+	                    review.getId(),                  // 리뷰 ID
+	                    review.getItem().getTitle(),     // 아이템 이름
+	                    review.getRating(),              // 평점
+	                    review.getContent()              // 리뷰 내용
+	            ))
+	            .collect(Collectors.toList());
+	}
 
 }

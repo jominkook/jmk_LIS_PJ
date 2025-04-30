@@ -18,6 +18,21 @@
             <p>가격: <span th:text="${item.price}">Item Price</span> 원</p>
             <p>카테고리: <span th:text="${item.categoryName != null ? item.categoryName : 'N/A'}">Category Name</span></p>
             <p>부모 카테고리: <span th:text="${item.parentCategoryName != null ? item.parentCategoryName : '없음'}">Parent Category Name</span></p>
+			
+			<!-- 상태 출력 -->
+            <p>상태: 
+                <span th:switch="${item.status}">
+                    <span th:case="'AVAILABLE'">판매 중</span>
+                    <span th:case="'RESERVED'">예약 중</span>
+                    <span th:case="'SOLD'">거래 완료</span>
+                    <span th:case="*">알 수 없음</span>
+                </span>
+            </p>
+			
+			<!-- S3 이미지 출력 -->
+            <div>
+              <img th:src="${item.imageUrl}" alt="Item Image" style="max-width: 300px; max-height: 300px;">
+            </div>
             
             <!-- 수정 버튼: 본인이 작성한 아이템에만 표시 -->
             <button th:if="${item.sellerEmail != null and #authentication != null and item.sellerEmail == #authentication.name}" 
@@ -26,15 +41,16 @@
             <button class="btn btn-primary chat-button" style="margin-top: 8px;" 
                     th:attr="data-item-id=${item.id}">채팅</button>
                     
-            <!-- 리뷰 조회 -->
-            <div>
-                <h4>리뷰</h4>
-                <ul id="reviews-${item.id}">
-                    <!-- 리뷰 목록이 동적으로 추가됩니다 -->
-                </ul>
-                <button class="btn btn-secondary load-reviews-button" style="margin-top: 8px;" 
-                        th:attr="data-item-id=${item.id}">리뷰 보기</button>
-            </div>
+			<!-- 아이템별 리뷰 출력 -->
+	        <div>
+	            <h4>리뷰</h4>
+	            <ul>
+	                <li th:each="review : ${itemReviews[item.id]}">
+	                    <p><strong>평점:</strong> <span th:text="${review.rating}">5</span>점</p>
+	                    <p><strong>내용:</strong> <span th:text="${review.content}">리뷰 내용</span></p>
+	                </li>
+	            </ul>
+	        </div>
 
 			<!-- 리뷰 등록 페이지로 이동 -->
 			<div>

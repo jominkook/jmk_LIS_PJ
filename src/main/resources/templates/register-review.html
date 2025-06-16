@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 등록</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">리뷰 등록</h2>
+        
+        
+
+        <!-- 리뷰 등록 폼 -->
+		<form id="review-form" th:action="@{'/api/items/' + ${itemId} + '/reviews'}" method="post">
+			<!-- revieweeId를 숨겨진 필드로 추가 -->
+			<input type="hidden" id="revieweeId" name="revieweeId" th:value="${revieweeId}" />
+		    <div class="mb-3">
+		        <label for="rating" class="form-label">평점</label>
+		        <select id="rating" name="rating" class="form-select" required>
+		            <option value="1">1점</option>
+		            <option value="2">2점</option>
+		            <option value="3">3점</option>
+		            <option value="4">4점</option>
+		            <option value="5">5점</option>
+		        </select>
+		    </div>
+		    <div class="mb-3">
+		        <label for="content" class="form-label">리뷰 내용</label>
+		        <textarea id="content" name="content" class="form-control" rows="5" placeholder="리뷰 내용을 입력하세요" required></textarea>
+		    </div>
+		    <button type="submit" class="btn btn-primary">리뷰 등록</button>
+		</form>
+    </div>
+
+    <script>
+		document.getElementById('review-form').addEventListener('submit', function(event) {
+		    event.preventDefault();
+
+		    // 폼 데이터 가져오기
+		    const revieweeId = parseInt(document.getElementById('revieweeId').value);
+		    console.log("revieweeId:", revieweeId); // 디버깅용
+
+		    const formData = {
+		        revieweeId: revieweeId,
+		        rating: parseInt(document.getElementById('rating').value),
+		        content: document.getElementById('content').value
+		    };
+
+		    // itemId를 동적으로 가져오기
+		    const itemId = [[${itemId}]]; // Thymeleaf를 사용하여 itemId 가져오기
+		    console.log("itemId:", itemId); // 디버깅용
+
+		    // URL 동적으로 생성
+		    const actionUrl = `http://localhost:8080/api/items/${itemId}/reviews`;
+
+		    // 리뷰 등록 API 호출
+		    fetch(actionUrl, {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json'
+		        },
+		        body: JSON.stringify(formData),
+		    })
+		    .then(response => {
+		        if (!response.ok) {
+		            throw new Error('리뷰 등록 실패');
+		        }
+		        return response.json();
+		    })
+			.then(data => {
+			    alert('리뷰가 성공적으로 등록되었습니다!');
+			    window.location.href = `/view/items`; // 아이템 조회 페이지로 리다이렉트
+			})
+		    .catch(error => {
+		        console.error('Error:', error);
+		        alert('리뷰 등록에 실패했습니다.');
+		    });
+		});
+    </script>
+</body>
+</html>

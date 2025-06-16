@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Items</title>
+</head>
+<body>
+    <h1>Items</h1>
+    <ul>
+        <li th:each="item : ${items}">
+            <p>이름: <span th:text="${item.title}">Item Name</span></p>
+            <p>위치: 
+                <span th:text="${item.origin != null ? item.origin.street : 'N/A'}">Street</span>, 
+                <span th:text="${item.origin != null ? item.origin.city : 'N/A'}">City</span>, 
+                <span th:text="${item.origin != null ? item.origin.zipCode : 'N/A'}">Zip Code</span>
+            </p>
+            <p>판매자: <span th:text="${item.sellerName != null ? item.sellerName : 'N/A'}">Seller Name</span></p>
+            <p>가격: <span th:text="${item.price}">Item Price</span> 원</p>
+            <p>카테고리: <span th:text="${item.categoryName != null ? item.categoryName : 'N/A'}">Category Name</span></p>
+            <p>부모 카테고리: <span th:text="${item.parentCategoryName != null ? item.parentCategoryName : '없음'}">Parent Category Name</span></p>
+			
+			<!-- 상태 출력 -->
+            <p>상태: 
+                <span th:switch="${item.status}">
+                    <span th:case="'AVAILABLE'">판매 중</span>
+                    <span th:case="'RESERVED'">예약 중</span>
+                    <span th:case="'SOLD'">거래 완료</span>
+                    <span th:case="*">알 수 없음</span>
+                </span>
+            </p>
+			
+			<!-- S3 이미지 출력 -->
+            <div>
+              <img th:src="${item.imageUrl}" alt="Item Image" style="max-width: 300px; max-height: 300px;">
+            </div>
+            
+            <!-- 수정 버튼: 본인이 작성한 아이템에만 표시 -->
+            <button th:if="${item.sellerEmail != null and #authentication != null and item.sellerEmail == #authentication.name}" 
+                               class="btn btn-primary edit-button" style="margin-top: 8px;" 
+                               th:attr="data-id=${item.id}">수정</button>
+            <button class="btn btn-primary chat-button" style="margin-top: 8px;" 
+                    th:attr="data-item-id=${item.id}">채팅</button>
+                    
+			<!-- 아이템별 리뷰 출력 -->
+	        <div>
+	            <h4>리뷰</h4>
+	            <ul>
+	                <li th:each="review : ${itemReviews[item.id]}">
+	                    <p><strong>평점:</strong> <span th:text="${review.rating}">5</span>점</p>
+	                    <p><strong>내용:</strong> <span th:text="${review.content}">리뷰 내용</span></p>
+	                </li>
+	            </ul>
+	        </div>
+
+			<!-- 리뷰 등록 페이지로 이동 -->
+			<div>
+				<button class="btn btn-primary" style="margin-top: 8px;" 
+				            th:attr="onclick='window.location.href=\'/reviews/register?itemId=' + ${item.id} + '&revieweeId=' + ${item.sellerId} + '\''">
+				        리뷰 등록
+				</button>
+			</div>
+        </li>
+    </ul>
+    <p th:if="${#lists.isEmpty(items)}">등록된 아이템이 없습니다.</p>
+</body>
+
+<script>
+    // DOMContentLoaded 이벤트로 JavaScript 실행
+    document.addEventListener('DOMContentLoaded', function () {
+        // 모든 수정 버튼에 클릭 이벤트 추가
+        const editButtons = document.querySelectorAll('.edit-button');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.getAttribute('data-id'); // data-id 속성에서 ID 가져오기
+                window.location.href = '/view/items/edit/' + itemId; // 수정 페이지로 이동
+            });
+        });
+        
+        // 모든 채팅 버튼에 클릭 이벤트 추가
+        const chatButtons = document.querySelectorAll('.chat-button');
+        chatButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.getAttribute('data-item-id'); // data-item-id 속성에서 아이템 ID 가져오기
+                window.location.href = `/view/chat/${itemId}`; // 채팅방 페이지로 이동
+            });
+        });
+    });
+    
+    document.addEventListener('DOMContentLoaded', function () {
+            // 리뷰 보기 버튼 이벤트
+            const loadReviewButtons = document.querySelectorAll('.load-reviews-button');
+            loadReviewButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const itemId = this.getAttribute('data-item-id');
+                    loadReviews(itemId);
+                });
+            });
+
+            // 리뷰 조회 함수
+            function loadReviews(itemId) {
+                fetch(`http://localhost:8080/api/items/${itemId}/reviews`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`리뷰를 가져오는 데 실패했습니다. 상태 코드: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(reviews => {
+                        const reviewsContainer = document.getElementById(`reviews-${itemId}`);
+                        reviewsContainer.innerHTML = '';
+                        reviews.forEach(review => {
+                            const reviewElement = document.createElement('li');
+                            reviewElement.innerHTML = `
+                                <p><strong>평점:</strong> ${review.rating}점</p>
+                                <p><strong>내용:</strong> ${review.content}</p>
+                            `;
+                            reviewsContainer.appendChild(reviewElement);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('리뷰를 불러오는 데 실패했습니다.');
+                    });
+            }
+        });
+</script>
+</html>

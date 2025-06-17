@@ -2,7 +2,8 @@
 FROM openjdk:17-jdk-slim
 
 # 2. Application JAR file
-COPY build/libs/jmk_LIS_PJ-0.0.1-SNAPSHOT.jar app.jar
+ARG JAR_FILE
+COPY ${JAR_FILE} app.jar
 
 # 3. Expose port
 EXPOSE 9090

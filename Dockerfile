@@ -2,8 +2,7 @@
 FROM openjdk:17-jdk-slim
 
 # 2. Application JAR file
-ARG JAR_FILE=build/libs/logistic-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
+COPY build/libs/jmk_LIS_PJ-0.0.1-SNAPSHOT.jar app.jar
 
 # 3. Expose port
 EXPOSE 9090

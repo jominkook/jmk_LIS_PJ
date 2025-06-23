@@ -14,7 +14,6 @@ public class ValidationCheck {
     public Member getMember(Optional<Member> member) {
         return member.orElseThrow(() -> new IllegalArgumentException("없는 회원 입니다"));
     }
-  
 
     //유효한 상품인지 검증
     public Item getItem(Optional<Item> item) {

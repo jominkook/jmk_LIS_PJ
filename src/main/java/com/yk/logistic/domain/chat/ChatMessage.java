@@ -37,6 +37,8 @@ public class ChatMessage {
         joinColumns = @JoinColumn(name = "message_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+
+
     private List<Member> readByUsers = new ArrayList<>(); // 메시지를 읽은 사용자 목록
 
     @Column(name = "read_at")

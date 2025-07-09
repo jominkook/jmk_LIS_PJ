@@ -1,4 +1,4 @@
-package com.yk.logistic.dto.review;
+package com.yk.logistic.dto.review.request;
 
 import lombok.Getter;
 import lombok.Setter;

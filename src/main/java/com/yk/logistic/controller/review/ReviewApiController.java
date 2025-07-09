@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.yk.logistic.domain.review.Review;
-import com.yk.logistic.dto.review.ReviewRequest;
+import com.yk.logistic.dto.review.request.ReviewRequest;
 import com.yk.logistic.service.review.ReviewService;
 
 

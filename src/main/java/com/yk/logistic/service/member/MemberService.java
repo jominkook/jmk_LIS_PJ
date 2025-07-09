@@ -34,4 +34,9 @@ public class MemberService {
             throw new IllegalArgumentException("Invalid email or password");
         }
     }
+
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
 }

@@ -3,6 +3,7 @@ package com.yk.logistic.controller.member;
 import com.yk.logistic.constant.SessionConst;
 import com.yk.logistic.domain.member.Member;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -48,4 +49,5 @@ public class MemberApiController {
             return "redirect:/login?error";
         }
     }
+
 }

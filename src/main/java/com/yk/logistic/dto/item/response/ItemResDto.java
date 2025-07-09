@@ -1,6 +1,7 @@
 package com.yk.logistic.dto.item.response;
 
 import com.yk.logistic.domain.address.Address;
+
 import lombok.Getter;
 
 @Getter
@@ -10,27 +11,38 @@ public class ItemResDto {
     private Address origin;
     private int price;
     private String status;
-    private Long sellerId; // 판매자 ID
-    private String sellerName; // 판매자 이름
-    private String sellerEmail; // 판매자 이메일
+    private Long sellerId;
+    private String sellerName;
+    private String sellerEmail;
     private String categoryName;
     private String parentCategoryName;
-    private String imageUrl; // 이미지 URL 추가
+    private String imageUrl;
+    private int startPrice; // 경매 시작가
+    private String auctionEndTime; // 경매 종료 시간
+    private String description; // 상품 설명 (추가)
+    private String categoryFullName; // 카테고리 전체 이름 (추가)
+    private Double latitude;
+    private Double longitude;
 
-    // 생성자
-    public ItemResDto(Long id, String title, Address origin, int price, String status, 
-            Long sellerId, String sellerName, String sellerEmail, 
-            String categoryName, String parentCategoryName, String imageUrl) { // 이미지 URL 추가
+
+    public ItemResDto(Long id, String title, Address origin, int price,  Long sellerId, String sellerName,
+                      String sellerEmail, String categoryName, String parentCategoryName, String imageUrl,
+                      int startPrice, String auctionEndTime, String description, String categoryFullName, Double latitude, Double longitude) {
         this.id = id;
         this.title = title;
         this.origin = origin;
         this.price = price;
-        this.status = status;
         this.sellerId = sellerId;
         this.sellerName = sellerName;
         this.sellerEmail = sellerEmail;
         this.categoryName = categoryName;
         this.parentCategoryName = parentCategoryName;
-        this.imageUrl = imageUrl; // 이미지 URL 설정
+        this.imageUrl = imageUrl;
+        this.startPrice = startPrice;
+        this.auctionEndTime = auctionEndTime;
+        this.description = description; // 상품 설명 추가
+        this.categoryFullName = categoryFullName; // 카테고리 전체 이름 추가
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

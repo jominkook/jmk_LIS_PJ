@@ -1,6 +1,7 @@
 package com.yk.logistic.dto.item.request;
 
 import com.yk.logistic.domain.address.Address;
+import com.yk.logistic.domain.member.Member;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,22 +9,31 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SaveItemReqDto {
-	private String title; // 상품 제목 (필드 이름 변경)
-    private Address origin; // 상품 위치 (도로명, 도시, 우편번호)
-    private int price; // 상품 가격
-    private Long categoryId; // 카테고리 ID
-    private String imageUrls; // 사진 경로 추가
-    private String status; // 상태값 추가
-    
-    // 모든 필드를 초기화하는 생성자 추가
-    public SaveItemReqDto(String title, String street, String city, String zipCode, int price, Long categoryId, String imageUrls,String status) {
+    private String title;
+    private Address origin;
+    private int price;
+    private Long categoryId;
+    private String imageUrls;
+    private String status;
+    private int startPrice;
+    private String auctionEndTime;
+    private String description;
+    private Member seller;
+    private Double latitude;
+    private Double longitude;
+
+    public SaveItemReqDto(String title, String street, String city, String zipCode, int price, Long categoryId,
+                          String imageUrls, String status, int startPrice, String auctionEndTime,
+                          Double latitude, Double longitude) {
         this.title = title;
-        this.origin = new Address(street, city, zipCode); // Address 객체 생성
+        this.origin = new Address(street, city, zipCode);
         this.price = price;
         this.categoryId = categoryId;
         this.imageUrls = imageUrls;
         this.status = status;
+        this.startPrice = startPrice;
+        this.auctionEndTime = auctionEndTime;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
-    
-    
 }

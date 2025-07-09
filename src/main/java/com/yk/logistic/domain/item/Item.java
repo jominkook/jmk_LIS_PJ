@@ -4,23 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.yk.logistic.domain.address.Address;
+import com.yk.logistic.domain.auction.Auction;
 import com.yk.logistic.domain.category.Category;
 import com.yk.logistic.domain.member.Member;
 import com.yk.logistic.domain.review.Review;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,10 +28,9 @@ public class Item {
     @Embedded
     private Address origin; // 상품 위치 (도로명, 도시, 우편번호)
 
-    private int price; // 상품 가격
+    private String description; // 상품 설명
 
-    @Enumerated(EnumType.STRING)
-    private ItemStatus status = ItemStatus.AVAILABLE; // 기본값 설정 // 거래 상태 (판매 중, 예약 중, 거래 완료)
+    private int price; // 상품 가격 (추가)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
@@ -52,33 +39,44 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category; // 카테고리
-    
+
+    @OneToOne(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Auction auction; // 경매 정보
+
     @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>(); // 아이템에 대한 리뷰 리스트
-    
+
     @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ItemImage> images = new ArrayList<>(); // 이미지 리스트
 
+    //위치기반 서비스 엔티티
+    private Double latitude;
+
+    private Double longitude;
+
     @Builder
-    public Item(String title, Address origin, int price, ItemStatus status, Member seller, Category category) {
+    public Item(String title, Address origin, String description, int price, Member seller, Category category, Double latitude, Double longitude) {
         this.title = title;
         this.origin = origin;
+        this.description = description;
         this.price = price;
-        this.status = status != null ? status : ItemStatus.AVAILABLE;
         this.seller = seller;
         this.category = category;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    // 상품 정보 업데이트 메서드
-    public void updateItem(String title, Address origin, int price, Category category, ItemStatus status) {
+    public void updateItem(String title, Address origin, String description, int price, Category category, Double latitude, Double longitude) {
         this.title = title;
         this.origin = origin;
+        this.description = description;
         this.price = price;
         this.category = category;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
-        // 상태값 업데이트
-        if (status != null) {
-            this.status = status;
-        }
+    public void setAuction(Auction auction) {
+        this.auction = auction;
     }
 }

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 등록</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-group { margin-bottom: 15px; }
+        .container { max-width: 600px; margin: 30px auto; }
+        .registration-form-wrapper { box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 2rem; border-radius: 1rem; background: #fff; }
+    </style>
+    <!-- 네이버 지도 JS API -->
+    <script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=zgfb04lry8&submodules=geocoder">
+    </script>
+</head>
+<body>
+<main class="main">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="registration-form-wrapper">
+                    <div class="section-header mb-4 text-center">
+                        <h2>상품 등록</h2>
+                        <p>신규 상품 정보를 입력하세요.</p>
+                    </div>
+                    <form id="register-item-form" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">상품명</label>
+                            <input id="title" name="title" class="form-control" type="text" required>
+                        </div>
+
+                        <input type="hidden" id="status" name="status" value="REGISTERED">
+
+                        <div class="mb-3">
+                            <label for="street" class="form-label">도로명</label>
+                            <input id="street" name="origin.street" class="form-control" type="text" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="city" class="form-label">도시</label>
+                            <input id="city" name="origin.city" class="form-control" type="text" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="zipCode" class="form-label">우편번호</label>
+                            <input id="zipCode" name="origin.zipCode" class="form-control" type="text" required>
+                        </div>
+                        <!-- 위도/경도 hidden input 추가 -->
+                        <input type="hidden" id="latitude" name="latitude">
+                        <input type="hidden" id="longitude" name="longitude">
+                        <div class="mb-3">
+                            <button type="button" id="auto-fill-btn" class="btn btn-outline-secondary w-100">현재 위치로 자동입력</button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">즉시구매가</label>
+                            <input id="price" name="price" class="form-control" type="number" required min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">카테고리</label>
+                            <select id="category" name="categoryId" class="form-select" required>
+                                <option value="">카테고리 선택</option>
+                                <!-- Thymeleaf 예시: 서버에서 categories 리스트를 내려줌 -->
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">상품 사진</label>
+                            <input id="image" name="image" class="form-control" type="file" accept="image/*" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">상품 설명</label>
+                            <textarea id="description" name="description" class="form-control"></textarea>
+                        </div>
+                        <!-- 경매 관련 입력 제거 -->
+                        <input type="hidden" id="startPrice" name="startPrice" value="0">
+                        <input type="hidden" id="auctionEndTime" name="auctionEndTime" value="">
+                        <div class="text-center mb-4">
+                            <button type="submit" class="btn btn-primary w-100 submit_button">상품 등록</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('auto-fill-btn').addEventListener('click', function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    // 위도/경도 hidden input에 저장
+                    document.getElementById('latitude').value = lat;
+                    document.getElementById('longitude').value = lng;
+                    naver.maps.Service.reverseGeocode({
+                        coords: new naver.maps.LatLng(lat, lng),
+                        orders: [
+                            naver.maps.Service.OrderType.ROAD_ADDR,
+                            naver.maps.Service.OrderType.ADDR
+                        ].join(',')
+                    }, function(status, response) {
+                        if (status === naver.maps.Service.Status.OK) {
+                            var result = response.v2.address;
+                            document.getElementById('street').value = result.roadAddress || '';
+                            document.getElementById('city').value = result.city || '';
+                            document.getElementById('zipCode').value = result.zipCode || '';
+                        } else {
+                            alert('주소 정보를 찾을 수 없습니다.');
+                        }
+                    });
+                }, function () {
+                    alert('위치 정보를 가져올 수 없습니다.\n브라우저의 위치 권한을 허용했는지 확인하세요.');
+                });
+            } else {
+                alert('브라우저가 위치정보를 지원하지 않습니다.');
+            }
+        });
+    });
+</script>
+<script>
+    document.getElementById('register-item-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData();
+        const origin = {
+            street: document.getElementById('street').value,
+            city: document.getElementById('city').value,
+            zipCode: document.getElementById('zipCode').value
+        };
+        formData.append('title', document.getElementById('title').value);
+        formData.append('origin', JSON.stringify(origin));
+        formData.append('price', document.getElementById('price').value);
+        formData.append('categoryId', document.getElementById('category').value);
+        formData.append('image', document.getElementById('image').files[0]);
+
+        // description 기본값 처리
+        let desc = document.getElementById('description').value;
+        if (!desc) desc = "";
+        formData.append('description', desc);
+
+        // status 기본값 처리
+        formData.append('status', 'REGISTERED');
+
+        // 경매 관련 값은 기본값으로(0, "")
+        formData.append('startPrice', 0);
+        formData.append('auctionEndTime', "");
+
+        //임시 네이버 maps 에러로 인해
+        if (!document.getElementById('latitude').value) {
+            document.getElementById('latitude').value = "37.5665";
+        }
+        if (!document.getElementById('longitude').value) {
+            document.getElementById('longitude').value = "126.9780";
+        }
+
+        formData.append('latitude', document.getElementById('latitude').value);
+        formData.append('longitude', document.getElementById('longitude').value);
+
+        fetch('/api/items/register', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('등록 실패');
+                return response.json();
+            })
+            .then(data => {
+                alert('상품이 성공적으로 등록되었습니다!');
+                window.location.href = '/view/items';
+            })
+            .catch(error => {
+                alert('상품 등록에 실패했습니다.');
+            });
+    });
+</script>
+</body>
+</html>

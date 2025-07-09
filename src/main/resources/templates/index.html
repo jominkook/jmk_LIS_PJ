@@ -3,11 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Home</title>
+    <title th:text="${pageTitle}">Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <!-- Verti CSS -->
     <link rel="stylesheet" href="/verti-css/main.css" />
-    <!-- 필요시 Verti 아이콘 폰트 등 추가 -->
 </head>
 <body class="is-preload homepage">
 <div id="page-wrapper">
@@ -18,28 +16,24 @@
             <!-- Logo -->
             <div id="logo">
                 <h1>
-                    <a href="index.html">나이쓰마켓</a>
-                    <i class="icon solid fa-shopping-cart"></i></h2>
+                    <a href="/">나이쓰마켓</a>
+
                 </h1>
+                <i class="icon solid fa-shopping-cart"></i>
             </div>
             <!-- Nav -->
             <nav id="nav">
                 <ul>
                     <li><span th:text="${username} + '님'"></span></li>
-                    <li>
-                        <a href="#">알림</a>
-                        <ul>
-                            <li>
-                                <div id="notificationButton" style="position: relative; display: inline-block; cursor: pointer;">
-                                    <img src="/images/bell-icon.png" alt="Notifications" width="30" height="30">
-                                    <span id="notificationBadge" style="position: absolute; top: -5px; right: -5px; background-color: red; color: white; border-radius: 50%; padding: 5px 10px; font-size: 12px; display: none;">0</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
                     <li><a href="#" id="selectitems-button">판매상품조회</a></li>
                     <li><a href="#" id="inputItems-button">판매상품등록</a></li>
                     <li><a href="#" id="logout-button">Logout</a></li>
+                    <li>
+                        <div id="notificationButton" style="position: relative; display: inline-block; cursor: pointer;">
+                            <img src="/images/bell-icon.png" alt="Notifications" width="30" height="30">
+                            <span id="notificationBadge" style="position: absolute; top: -5px; right: -5px; background-color: red; color: white; border-radius: 50%; padding: 5px 10px; font-size: 12px; display: none;">0</span>
+                        </div>
+                    </li>
                 </ul>
             </nav>
         </header>
@@ -67,7 +61,7 @@
 
 </div>
 
-<!-- Verti JS (verti-js 폴더에서 불러오기) -->
+<!-- Verti JS -->
 <script src="/verti-js/jquery.min.js"></script>
 <script src="/verti-js/jquery.dropotron.min.js"></script>
 <script src="/verti-js/browser.min.js"></script>
@@ -77,8 +71,8 @@
 <!-- SockJS & STOMP (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
-<!-- 알림 WebSocket 코드 -->
-<script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
     document.addEventListener('DOMContentLoaded', function() {
         // 판매상품조회 버튼
         var itemsButton = document.getElementById('selectitems-button');
@@ -94,7 +88,6 @@
                 window.location.href = '/view/items/register';
             });
         }
-
         // 로그아웃 버튼
         var logoutButton = document.getElementById('logout-button');
         if (logoutButton) {
@@ -109,31 +102,28 @@
         const notificationBadge = document.getElementById('notificationBadge');
         let notificationCount = 0;
 
+        // userId Thymeleaf 변수 바인딩 (컨트롤러에서 model.addAttribute("userId", ...) 필요)
+        const userId = /*[[${userId}]]*/ null;
+        if (!userId) {
+            // 로그인 안 된 경우 알림 연결하지 않음
+            return;
+        }
+
         // WebSocket 연결
         const socket = new SockJS('/ws');
         const stompClient = Stomp.over(socket);
 
-        const userId = [[${userId}]]; // 서버에서 전달된 사용자 ID
-        console.log("User ID:", userId);
-
         stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
-
-            // 알림 채널 구독
             stompClient.subscribe(`/topic/notifications/${userId}`, function (notification) {
-                console.log("Received notification:", notification.body);
                 handleNotification(notification.body);
             });
         });
 
         // 알림 처리 함수
         function handleNotification(message) {
-            // 알림 개수 증가
             notificationCount++;
             notificationBadge.textContent = notificationCount;
             notificationBadge.style.display = 'inline-block';
-
-            // 알림 버튼 색상 변경
             notificationButton.querySelector('img').style.filter = 'hue-rotate(60deg)';
         }
 
@@ -145,6 +135,7 @@
             notificationButton.querySelector('img').style.filter = 'none';
         });
     });
+    /*]]>*/
 </script>
 </body>
 </html>

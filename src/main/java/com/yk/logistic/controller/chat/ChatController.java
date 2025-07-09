@@ -46,7 +46,7 @@ public class ChatController {
             .build();
 
         // 메시지 저장
-        ChatMessage savedMessage =chatMessageService.saveMessage(chatRoom.getId(), sender.getId(), chatMessage.getMessage());
+        ChatMessage savedMessage = chatMessageService.saveMessage(chatRoom.getId(), sender.getId(), chatMessage.getMessage());
 
         // 저장된 메시지를 기반으로 DTO 생성
         ChatMessageResponseDto responseDto = new ChatMessageResponseDto(savedMessage);

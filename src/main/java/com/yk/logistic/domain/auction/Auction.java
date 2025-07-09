@@ -1,6 +1,5 @@
 package com.yk.logistic.domain.auction;
 
-import com.yk.logistic.domain.bid.Bid;
 import com.yk.logistic.domain.item.Item;
 import com.yk.logistic.domain.member.Member;
 import jakarta.persistence.*;
@@ -10,61 +9,77 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-@Table(name = "auction")
 public class Auction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //경매 대상 상품(1:1)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
-    private Item item;
+    private Item item; // 경매 대상 상품
 
-    //경매시작가
     @Column(nullable = false)
-    private int startPrice;
-    // 현재 최고가
-    @Column(nullable = false)
-    private int currentPrice;
+    private int startPrice; // 경매 시작가
 
-    // 현재 최고 입찰자(낙찰 후보)
+    @Column(nullable = false)
+    private int currentPrice; // 현재 최고가
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "winner_id")
-    private Member winner;
-
-    // 경매 시작/종료 시간
-    @Column(nullable = false)
-    private LocalDateTime startTime;
+    private Member winner; // 현재 최고 입찰자
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private LocalDateTime startTime; // 경매 시작 시간
 
+    @Column(nullable = false)
+    private LocalDateTime endTime; // 경매 종료 시간
 
-    // 입찰 내역
-    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Bid> bids = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private AuctionStatus status; // 경매 상태
 
+    // 생성자 및 빌더
     @Builder
     public Auction(Item item, int startPrice, LocalDateTime startTime, LocalDateTime endTime) {
         this.item = item;
         this.startPrice = startPrice;
-        this.currentPrice = startPrice;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.status = AuctionStatus.ACTIVE; // 기본 상태를 ACTIVE로 설정
+        this.currentPrice = startPrice; // 현재가는 시작가로 초기화
     }
 
-    // 최고가 및 낙찰 후보 갱신
-    public void updateCurrentPrice(int price, Member bidder) {
-        this.currentPrice = price;
+    // 도메인 메서드: 경매 상태 변경
+    public void activateAuction() {
+        if (this.status != AuctionStatus.ACTIVE) {
+            this.status = AuctionStatus.ACTIVE;
+        }
+    }
+
+    public void endAuction() {
+        if (this.status != AuctionStatus.ACTIVE) {
+            throw new IllegalStateException("경매가 이미 종료되었거나 활성화되지 않았습니다.");
+        }
+        this.status = AuctionStatus.ENDED;
+    }
+
+    // 도메인 메서드: 입찰 처리
+    public void placeBid(int bidPrice, Member bidder) {
+        if (bidPrice <= currentPrice) {
+            throw new IllegalArgumentException("입찰가는 현재가보다 높아야 합니다.");
+        }
+        if (!isAuctionActive()) {
+            throw new IllegalStateException("경매가 활성화 상태가 아닙니다.");
+        }
+        this.currentPrice = bidPrice;
         this.winner = bidder;
     }
 
-
+    // 도메인 메서드: 경매 활성 상태 확인
+    public boolean isAuctionActive() {
+        return LocalDateTime.now().isBefore(endTime) && status == AuctionStatus.ACTIVE;
+    }
 }

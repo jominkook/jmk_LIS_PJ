@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>경매 목록</title>
+    <title>상품 전체 목록</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         @media (min-width: 992px) {
@@ -12,7 +12,7 @@
                 max-width: 20%;
             }
         }
-        .auction-card {
+        .item-card {
             padding: 16px 10px 16px 10px;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
@@ -20,7 +20,7 @@
             height: 100%;
             margin-bottom: 0;
         }
-        .auction-image {
+        .item-image {
             margin-bottom: 8px;
         }
         .main-image {
@@ -31,7 +31,7 @@
             margin: 0 auto;
             border-radius: 8px;
         }
-        .auction-title {
+        .item-title {
             margin: 4px 0 2px 0;
             font-size: 1em;
             font-weight: 500;
@@ -39,11 +39,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .auction-meta, .auction-status, .auction-category {
+        .item-meta, .item-status, .item-category {
             font-size: 0.92em;
             margin-bottom: 2px;
         }
-        .auction-price {
+        .item-price {
             color: #e74c3c;
             font-weight: 600;
             text-align: center !important;
@@ -59,21 +59,21 @@
 </head>
 <body>
 <main class="main">
-    <section id="auction-list" class="auction-list section">
-        <h2 class="mb-4 text-center">경매 목록</h2>
+    <section id="item-list" class="item-list section">
+        <h2 class="mb-4 text-center">상품 전체 목록</h2>
         <div class="container">
             <div class="row g-4">
                 <li th:each="item : ${items}" class="col-6 col-md-4 col-lg-5th" style="list-style:none;">
-                    <div class="auction-card text-center">
-                        <div class="auction-image">
+                    <div class="item-card text-center">
+                        <div class="item-image">
                             <img th:if="${item.imageUrl != null}" th:src="${item.imageUrl}" class="main-image img-fluid" th:alt="${item.title}">
                             <span th:if="${item.imageUrl == null}">이미지가 없습니다.</span>
                         </div>
-                        <div class="auction-details">
-                            <h4 class="auction-title">
-                                <a href="#" style="color:#222; text-decoration:none;" th:text="${item.title}">경매 상품명</a>
+                        <div class="item-details">
+                            <h4 class="item-title">
+                                <a th:href="@{/view/items/{id}(id=${item.id})}" style="color:#222; text-decoration:none;" th:text="${item.title}">상품명</a>
                             </h4>
-                            <div class="auction-meta">
+                            <div class="item-meta">
                                 <div>
                                     <strong>위치:</strong>
                                     <span th:text="${item.origin != null ? item.origin.street : 'N/A'}">Street</span>,
@@ -81,20 +81,21 @@
                                     <span th:text="${item.origin != null ? item.origin.zipCode : 'N/A'}">Zip Code</span>
                                 </div>
                                 <div><strong>판매자:</strong> <span th:text="${item.sellerName != null ? item.sellerName : 'N/A'}">Seller Name</span></div>
-                                <div class="auction-price">
-                                    <strong>가격:</strong> <span th:text="${item.price}">0</span> 원
+                                <div class="item-price">
+                                    <strong>즉시구매가:</strong> <span th:text="${item.price}">0</span> 원
                                 </div>
-                                <div class="auction-category">
+                                <div class="item-category">
                                     <strong>카테고리:</strong> <span th:text="${item.categoryName != null ? item.categoryName : 'N/A'}">Category Name</span>
                                 </div>
-                                <div class="auction-category">
+                                <div class="item-category">
                                     <strong>부모 카테고리:</strong> <span th:text="${item.parentCategoryName != null ? item.parentCategoryName : '없음'}">Parent Category Name</span>
                                 </div>
                                 <div><strong>경매 시작가:</strong> <span th:text="${item.startPrice}">0</span> 원</div>
                                 <div><strong>경매 종료 시간:</strong> <span th:text="${item.auctionEndTime}">Auction End Time</span></div>
-                                <div class="auction-status">
+                                <div class="item-status">
                                     <strong>상태:</strong>
                                     <span th:switch="${item.status}">
+                                        <span th:case="'ACTIVE'">경매 진행 중</span>
                                         <span th:case="'ACTIVE'">경매 진행 중</span>
                                         <span th:case="'ENDED'">경매 종료</span>
                                         <span th:case="'CANCELLED'">경매 취소</span>
@@ -103,27 +104,40 @@
                                 </div>
                             </div>
                             <div class="mt-2 d-flex gap-2 justify-content-center">
+                                <!-- 판매자 본인만 노출: 수정/삭제/경매시작 -->
                                 <button th:if="${item.sellerEmail != null and #authentication != null and item.sellerEmail == #authentication.name}"
                                         class="btn btn-sm btn-outline-primary edit-button"
                                         th:attr="data-id=${item.id}">수정</button>
+                                <button th:if="${item.sellerEmail != null and #authentication != null and item.sellerEmail == #authentication.name}"
+                                        class="btn btn-sm btn-outline-danger delete-button"
+                                        th:attr="data-id=${item.id}">삭제</button>
 
-                                <button th:if="${item.sellerEmail != null and #authentication != null and item.sellerEmail == #authentication.name and item.status != 'ACTIVE'}"
+                                <button th:if="${item.sellerEmail != null
+                                        and #authentication != null
+                                        and item.sellerEmail == #authentication.name
+                                        and item.auctionEndTime == null}"
                                         class="btn btn-sm btn-warning start-auction-button"
                                         th:attr="data-id=${item.id}">경매 시작</button>
+
+                                <!-- 구매자: 즉시구매/상세보기 -->
+                                <button th:if="${item.sellerEmail == null or #authentication == null or item.sellerEmail != #authentication.name}"
+                                        class="btn btn-sm btn-success buy-button"
+                                        th:attr="data-id=${item.id}">즉시구매</button>
+                                <a th:href="@{/view/items/{id}(id=${item.id})}" class="btn btn-sm btn-secondary">상세보기</a>
                             </div>
                         </div>
                     </div>
                 </li>
             </div>
             <p th:if="${#lists.isEmpty(items)}" class="text-center text-muted mt-4" style="font-size:1.1em;">
-                등록된 아이템이 없습니다.
+                등록된 상품이 없습니다.
             </p>
         </div>
     </section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
+    // 경매 시작 버튼
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.start-auction-button').forEach(function(btn) {
             btn.addEventListener('click', function() {
@@ -149,6 +163,64 @@
                         location.reload();
                     })
                     .catch(() => alert('경매 시작에 실패했습니다.'));
+            });
+        });
+
+        document.querySelectorAll('.cancel-auction-button').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const auctionId = btn.getAttribute('data-auction-id');
+                if (!confirm('정말 경매를 취소하시겠습니까?')) return;
+                fetch('/api/auctions/cancel/' + auctionId, {
+                    method: 'PUT'
+                })
+                    .then(res => {
+                        if (!res.ok) throw new Error('경매 취소 실패');
+                        alert('경매가 취소되었습니다!');
+                        location.reload();
+                    })
+                    .catch(() => alert('경매 취소에 실패했습니다.'));
+            });
+        });
+
+        // 수정 버튼
+        document.querySelectorAll('.edit-button').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const itemId = btn.getAttribute('data-id')
+                window.location.href = '/view/items/edit/' + itemId;
+            });
+        });
+
+        // 삭제 버튼
+        document.querySelectorAll('.delete-button').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                if (!confirm('정말 삭제하시겠습니까?')) return;
+                const itemId = btn.getAttribute('data-id');
+                fetch('/api/items/delete/' + itemId, { // 컨트롤러 경로에 맞춤
+                    method: 'DELETE'
+                })
+                    .then(res => {
+                        if (!res.ok) throw new Error('삭제 실패');
+                        alert('삭제가 완료되었습니다!');
+                        location.reload();
+                    })
+                    .catch(() => alert('삭제에 실패했습니다.'));
+            });
+        });
+
+        // 즉시구매 버튼
+        document.querySelectorAll('.buy-button').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const itemId = btn.getAttribute('data-id');
+                if (!confirm('즉시구매 하시겠습니까?')) return;
+                fetch('/api/items/buy/' + itemId, {
+                    method: 'POST'
+                })
+                    .then(res => {
+                        if (!res.ok) throw new Error('구매 실패');
+                        alert('구매가 완료되었습니다!');
+                        location.reload();
+                    })
+                    .catch(() => alert('구매에 실패했습니다.'));
             });
         });
     });

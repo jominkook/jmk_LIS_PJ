@@ -3,9 +3,12 @@ package com.yk.logistic.service.item;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.yk.logistic.domain.address.Address;
 import com.yk.logistic.domain.auction.Auction;
 import com.yk.logistic.domain.member.Member;
+import com.yk.logistic.dto.item.request.UpdateItemReqDto;
 import com.yk.logistic.repository.auction.AuctionRepository;
+import com.yk.logistic.service.file.S3FileService;
 import org.springframework.stereotype.Service;
 import com.yk.logistic.domain.category.Category;
 import com.yk.logistic.domain.item.Item;
@@ -16,6 +19,7 @@ import com.yk.logistic.repository.category.CategoryRepository;
 import com.yk.logistic.repository.item.ItemRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -23,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
+    private final S3FileService s3FileService;
+
 
     @Override
     public ItemResDto registerItem(SaveItemReqDto reqDto) {
@@ -67,26 +73,45 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void updateItem(Long itemId, SaveItemReqDto reqDto) {
+    public void updateItem(Long itemId, UpdateItemReqDto dto) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("아이템을 찾을 수 없습니다."));
 
-        Category category = categoryRepository.findById(reqDto.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID: " + reqDto.getCategoryId()));
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID: " + dto.getCategoryId()));
+
+
+        Address origin = new Address(dto.getStreet(), dto.getCity(), dto.getZipCode());
+
+
+        // 기존 이미지 삭제(필요시)
+        item.getImages().clear();
+
+        // 새 이미지 저장
+        if (dto.getImages() != null) {
+            for (MultipartFile file : dto.getImages()) {
+                if (file != null && !file.isEmpty()) {
+                    String imageUrl = s3FileService.uploadFile(file);
+                    ItemImage itemImage = new ItemImage(imageUrl, item);
+                    item.getImages().add(itemImage);
+                }
+            }
+        }
 
         item.updateItem(
-                reqDto.getTitle(),
-                reqDto.getOrigin(),
-                reqDto.getDescription(),
-                reqDto.getPrice(),
+                dto.getTitle(),
+                origin,
+                dto.getDescription(),
+                dto.getPrice(),
                 category,
-                reqDto.getLatitude(),
-                reqDto.getLongitude()
+                dto.getLatitude(),
+                dto.getLongitude()
         );
+
     }
 
     @Override
-    public void deleteItem(Long itemId) {
+    public void deleteItem(Long itemId,String sellerEmail) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("아이템을 찾을 수 없습니다."));
         itemRepository.delete(item);

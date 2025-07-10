@@ -68,6 +68,16 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    public AuctionResDto cancelAuction(Long auctionId) {
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElseThrow(() -> new IllegalArgumentException("경매를 찾을 수 없습니다."));
+
+        auction.cancelAuction(); // 경매 취소 처리 (엔티티에 메서드 필요)
+
+        return transformToDto(auction);
+    }
+
+    @Override
     public AuctionResDto endAuction(Long auctionId) {
         // 경매 조회 및 검증
         Auction auction = auctionRepository.findById(auctionId)

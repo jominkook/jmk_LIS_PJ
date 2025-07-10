@@ -1,6 +1,5 @@
 package com.yk.logistic.controller.auction;
 
-import com.yk.logistic.dto.auction.request.PlaceBidReqDto;
 import com.yk.logistic.dto.auction.request.StartAuctionReqDto;
 import com.yk.logistic.dto.auction.response.AuctionResDto;
 import com.yk.logistic.service.auction.AuctionService;
@@ -25,6 +24,14 @@ public class AuctionApiController {
         );
         return ResponseEntity.ok(auction);
     }
+
+    // 경매 취소
+    @PutMapping("/cancel/{auctionId}")
+    public ResponseEntity<?> cancelAuction(@PathVariable Long auctionId) {
+        auctionService.cancelAuction(auctionId);
+        return ResponseEntity.ok().build();
+    }
+
 
     // 경매 종료
     @PostMapping("/{auctionId}/end")

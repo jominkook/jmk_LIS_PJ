@@ -3,6 +3,7 @@ package com.yk.logistic.service.item;
 import java.util.List;
 
 import com.yk.logistic.dto.item.request.SaveItemReqDto;
+import com.yk.logistic.dto.item.request.UpdateItemReqDto;
 import com.yk.logistic.dto.item.response.ItemResDto;
 
 public interface ItemService {
@@ -19,8 +20,8 @@ public interface ItemService {
     List<ItemResDto> findAuctionItems();
 
     // 등록한 아이템 수정
-    void updateItem(Long itemId, SaveItemReqDto dto);
+    void updateItem(Long itemId, UpdateItemReqDto dto);
 
     // 등록한 아이템 삭제
-    void deleteItem(Long itemId);
+    void deleteItem(Long itemId, String sellerEmail);
 }

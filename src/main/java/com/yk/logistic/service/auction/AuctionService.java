@@ -11,6 +11,9 @@ public interface AuctionService {
     // 입찰
     AuctionResDto placeBid(Long auctionId, int bidPrice, Long bidderId);
 
+    //경매 취소
+    AuctionResDto cancelAuction(Long auctionId);
+
     // 경매 종료
     AuctionResDto endAuction(Long auctionId);
 }

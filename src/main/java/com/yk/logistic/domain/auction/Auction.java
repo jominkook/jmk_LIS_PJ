@@ -50,15 +50,22 @@ public class Auction {
         this.endTime = endTime;
         this.status = AuctionStatus.ACTIVE; // 기본 상태를 ACTIVE로 설정
         this.currentPrice = startPrice; // 현재가는 시작가로 초기화
-    }
 
-    // 도메인 메서드: 경매 상태 변경
-    public void activateAuction() {
-        if (this.status != AuctionStatus.ACTIVE) {
-            this.status = AuctionStatus.ACTIVE;
+        // 경매 시작 시 아이템 상태도 ACTIVE로 변경
+        if (item != null) {
+            item.startAuction();
         }
     }
 
+    // 경매 취소
+    public void cancelAuction() {
+        if (this.status != AuctionStatus.ACTIVE) {
+            throw new IllegalStateException("진행 중인 경매만 취소할 수 있습니다.");
+        }
+        this.status = AuctionStatus.CANCELLED;
+    }
+
+    // 경매 종료
     public void endAuction() {
         if (this.status != AuctionStatus.ACTIVE) {
             throw new IllegalStateException("경매가 이미 종료되었거나 활성화되지 않았습니다.");

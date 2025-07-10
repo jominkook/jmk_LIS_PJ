@@ -23,9 +23,9 @@ public class AuctionResDto {
         this.itemId = itemId;
         this.startPrice = startPrice;
         this.currentPrice = currentPrice;
-        this.winnerName = winnerName != null ? winnerName : "No Winner"; // 기본값 설정
+        this.winnerName = winnerName != null ? winnerName : null; // 기본값 설정
         this.startTime = startTime;
         this.endTime = endTime;
-        this.status = status != null ? status : "UNKNOWN"; // 기본값 설정
+        this.status = status != null ? status : null; // 기본값 설정
     }
 }

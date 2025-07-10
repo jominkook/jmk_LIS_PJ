@@ -63,6 +63,6 @@ public class ItemViewController {
 		}
 		model.addAttribute("item", item);
 		model.addAttribute("categories", categoryService.findChildCategories());
-		return "edit-item";
+		return "edit-auction";
 	}
 }

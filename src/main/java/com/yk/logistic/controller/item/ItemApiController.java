@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.List;
 
 import com.yk.logistic.domain.member.Member;
+import com.yk.logistic.dto.item.request.UpdateItemReqDto;
 import com.yk.logistic.service.member.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,40 +104,29 @@ public class ItemApiController {
 			@RequestParam("origin") String originJson,
 			@RequestParam("price") int price,
 			@RequestParam("categoryId") Long categoryId,
-			@RequestParam("image") MultipartFile image,
-			@RequestParam(value = "status", required = false) String status,
-			@RequestParam("startPrice") int startPrice,
-			@RequestParam("auctionEndTime") String auctionEndTime,
-			@RequestParam("latitude") Double latitude,
-			@RequestParam("longitude") Double longitude) {
+			@RequestParam(value = "images", required = false) List<MultipartFile> images,
+			@RequestParam(value = "latitude", required = false) Double latitude,
+			@RequestParam(value = "longitude", required = false) Double longitude,
+			@RequestParam(value = "description", required = false) String description
+	) {
 		try {
-			String imagePath = null;
-
-			// 이미지가 업로드된 경우 S3에 업로드
-			if (image != null) {
-				imagePath = s3FileService.uploadFile(image);
-			}
-
-			// Address 객체 생성
 			ObjectMapper objectMapper = new ObjectMapper();
 			Address origin = objectMapper.readValue(originJson, Address.class);
 
-			// SaveItemReqDto 생성
-			SaveItemReqDto reqDto = new SaveItemReqDto(
+			if (description == null) description = "";
+
+			UpdateItemReqDto reqDto = new UpdateItemReqDto(
 					title,
 					origin.getStreet(),
 					origin.getCity(),
 					origin.getZipCode(),
 					price,
 					categoryId,
-					imagePath,
-					status,
-					startPrice,
-					auctionEndTime,
 					latitude,
-					longitude
+					longitude,
+					description,
+					images
 			);
-			// 아이템 수정
 			itemService.updateItem(id, reqDto);
 			return ResponseEntity.ok().build();
 		} catch (Exception e) {
@@ -144,5 +134,12 @@ public class ItemApiController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("아이템 수정 중 오류가 발생했습니다: " + e.getMessage());
 		}
+	}
+
+	@Operation(summary = "경매 아이템 삭제", description = "특정 경매 아이템을 삭제합니다.")
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<Void> deleteItem(@PathVariable Long id, Principal principal) {
+		itemService.deleteItem(id, principal.getName());
+		return ResponseEntity.ok().build();
 	}
 }

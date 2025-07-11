@@ -63,6 +63,10 @@ public class Auction {
             throw new IllegalStateException("진행 중인 경매만 취소할 수 있습니다.");
         }
         this.status = AuctionStatus.CANCELLED;
+        this.startPrice = 0;
+        this.currentPrice = 0;
+        this.winner = null;
+        this.endTime = LocalDateTime.now(); // endTime 초기화
     }
 
     // 경매 종료

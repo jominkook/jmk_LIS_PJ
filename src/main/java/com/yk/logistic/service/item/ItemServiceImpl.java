@@ -6,6 +6,7 @@ import java.util.List;
 import com.yk.logistic.domain.address.Address;
 import com.yk.logistic.domain.auction.Auction;
 import com.yk.logistic.domain.member.Member;
+import com.yk.logistic.dto.auction.response.AuctionResDto;
 import com.yk.logistic.dto.item.request.UpdateItemReqDto;
 import com.yk.logistic.repository.auction.AuctionRepository;
 import com.yk.logistic.service.file.S3FileService;
@@ -67,9 +68,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemResDto> findAuctionItems() {
-        return itemRepository.findByAuctionIsNotNull().stream()
-                .map(this::transformDomain)
-                .toList();
+        return itemRepository.findAuctionItems();
     }
 
     @Override
@@ -124,6 +123,23 @@ public class ItemServiceImpl implements ItemService {
 
         String imageUrl = item.getImages().isEmpty() ? null : item.getImages().get(0).getImageUrl();
 
+        // AuctionResDto 생성
+        AuctionResDto auctionDto = null;
+        String status = null;
+        if (item.getAuction() != null) {
+            status = item.getAuction().getStatus() != null ? item.getAuction().getStatus().name() : null;
+            auctionDto = new AuctionResDto(
+                    item.getAuction().getId(),
+                    item.getId(),
+                    item.getAuction().getStartPrice(),
+                    item.getAuction().getCurrentPrice(),
+                    item.getAuction().getWinner() != null ? item.getAuction().getWinner().getName() : null,
+                    item.getAuction().getStartTime(),
+                    item.getAuction().getEndTime(),
+                    status
+            );
+        }
+
         return new ItemResDto(
                 item.getId(),
                 item.getTitle(),
@@ -140,7 +156,9 @@ public class ItemServiceImpl implements ItemService {
                 item.getDescription(),
                 item.getCategory() != null ? item.getCategory().getName() : "Unknown Category",
                 item.getLatitude(),
-                item.getLongitude()
+                item.getLongitude(),
+                status, // status 추가
+                auctionDto // 마지막에 auction DTO 추가
         );
     }
 }

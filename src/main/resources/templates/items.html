@@ -115,9 +115,19 @@
                                 <button th:if="${item.sellerEmail != null
                                         and #authentication != null
                                         and item.sellerEmail == #authentication.name
-                                        and item.auctionEndTime == null}"
+                                        and item.auction == null}"
                                         class="btn btn-sm btn-warning start-auction-button"
                                         th:attr="data-id=${item.id}">경매 시작</button>
+
+                                <button th:if="${item.sellerEmail != null
+                                        and #authentication != null
+                                        and item.sellerEmail == #authentication.name
+                                        and item.auction != null
+                                        and item.status == 'ACTIVE'}"
+                                        class="btn btn-sm btn-danger cancel-auction-button"
+                                        th:attr="data-auction-id=${item.auction != null ? item.auction.auctionId : ''}">경매 취소</button>
+
+
 
                                 <!-- 구매자: 즉시구매/상세보기 -->
                                 <button th:if="${item.sellerEmail == null or #authentication == null or item.sellerEmail != #authentication.name}"

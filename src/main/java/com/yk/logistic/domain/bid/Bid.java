@@ -28,7 +28,7 @@ public class Bid {
     private Member bidder;
 
     @Column(nullable = false)
-    private int bidPrice;
+    private Long bidPrice;
 
     @Column(nullable = false)
     private LocalDateTime bidTime = LocalDateTime.now();
@@ -37,7 +37,7 @@ public class Bid {
     private boolean canceled = false; // 입찰 취소 여부
 
     @Builder
-    public Bid(Auction auction, Member bidder, int bidPrice) {
+    public Bid(Auction auction, Member bidder, Long bidPrice) {
         this.auction = auction;
         this.bidder = bidder;
         this.bidPrice = bidPrice;
@@ -47,5 +47,9 @@ public class Bid {
 
     public void cancel() {
         this.canceled = true;
+    }
+
+    public void changeBidPrice(Long bidPrice) {
+        this.bidPrice = bidPrice;
     }
 }

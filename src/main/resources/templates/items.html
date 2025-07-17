@@ -133,7 +133,23 @@
                                 <button th:if="${item.sellerEmail == null or #authentication == null or item.sellerEmail != #authentication.name}"
                                         class="btn btn-sm btn-success buy-button"
                                         th:attr="data-id=${item.id}">즉시구매</button>
-                                <a th:href="@{/view/items/{id}(id=${item.id})}" class="btn btn-sm btn-secondary">상세보기</a>
+<!--                                <a th:href="@{/view/items/{id}(id=${item.id})}" class="btn btn-sm btn-secondary">상세보기</a>-->
+
+                                <!-- 입찰하지 않은 경우 -->
+                                <button th:if="${item.auction != null
+                                        and item.status == 'ACTIVE'
+                                        and myBidAuctionIds != null
+                                        and !myBidAuctionIds.contains(item.auction.auctionId)}"
+                                        class="btn btn-sm btn-warning bid-button"
+                                        th:attr="data-auction-id=${item.auction.auctionId}">입찰</button>
+
+                                <!-- 이미 입찰한 경우 -->
+                                <button th:if="${item.auction != null
+                                        and item.status == 'ACTIVE'
+                                        and myBidAuctionIds != null
+                                        and myBidAuctionIds.contains(item.auction.auctionId)}"
+                                        class="btn btn-sm btn-info change-bid-button"
+                                        th:attr="data-auction-id=${item.auction.auctionId}">입찰 변경</button>
                             </div>
                         </div>
                     </div>
@@ -232,6 +248,49 @@
                     })
                     .catch(() => alert('구매에 실패했습니다.'));
             });
+        });
+    });
+
+    // 입찰 버튼
+    document.querySelectorAll('.bid-button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const auctionId = btn.getAttribute('data-auction-id');
+            const bidPrice = prompt('입찰가를 입력하세요');
+            if (!bidPrice) return;
+            fetch('/api/auctions/' + auctionId + '/bid', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    bidPrice: parseInt(bidPrice)
+                    // bidderId는 백엔드에서 인증정보로 처리
+                })
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('입찰 실패');
+                    alert('입찰이 완료되었습니다!');
+                    location.reload();
+                })
+                .catch(() => alert('입찰에 실패했습니다.'));
+        });
+    });
+
+    //입찰 변경
+    document.querySelectorAll('.change-bid-button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const auctionId = btn.getAttribute('data-auction-id');
+            const bidPrice = prompt('변경할 입찰가를 입력하세요');
+            if (!bidPrice) return;
+            fetch('/api/auctions/' + auctionId + '/bid', {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ bidPrice: parseInt(bidPrice) })
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('입찰 변경 실패');
+                    alert('입찰가가 변경되었습니다!');
+                    location.reload();
+                })
+                .catch(() => alert('입찰 변경에 실패했습니다.'));
         });
     });
 </script>

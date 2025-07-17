@@ -1,9 +1,18 @@
 package com.yk.logistic.controller.item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import com.yk.logistic.domain.member.Member;
+import com.yk.logistic.repository.member.MemberRepository;
+import com.yk.logistic.service.bid.BidService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +35,11 @@ public class ItemViewController {
 	private final ItemService itemService;
 	private final CategoryService categoryService;
 	private final ReviewService reviewService;
+	private final MemberRepository memberRepository;
+	private final BidService bidService;
+
+	private static final Logger logger = LoggerFactory.getLogger(ItemViewController.class);
+
 
 	@GetMapping("/register")
 	public String showRegisterForm(Model model) {
@@ -34,7 +48,7 @@ public class ItemViewController {
 	}
 
 	@GetMapping
-	public String findItemList(Model model) {
+	public String findItemList(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 		List<ItemResDto> items = itemService.findAllItems();
 
 		Map<Long, List<ReviewResponse>> itemReviews = new HashMap<>();
@@ -43,15 +57,40 @@ public class ItemViewController {
 			itemReviews.put(item.getId(), reviews);
 		}
 
+		// 로그인 사용자의 입찰 경매 ID 목록 추가
+		List<Long> myBidAuctionIds = new ArrayList<>();
+		if (userDetails != null) {
+			String email = userDetails.getUsername();
+			Member member = memberRepository.findByEmail(email).orElse(null);
+			if (member != null) {
+				myBidAuctionIds = bidService.findAuctionIdsByBidder(member.getId());
+			}
+		}
+		model.addAttribute("myBidAuctionIds", myBidAuctionIds);
+
 		model.addAttribute("items", items);
 		model.addAttribute("itemReviews", itemReviews);
+		logger.info("myBidAuctionIds: {}", myBidAuctionIds);
 		return "items";
 	}
 
 	@GetMapping("/auctions")
-	public String getAuctionItemList(Model model) {
+	public String getAuctionItemList(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 		List<ItemResDto> auctionItems = itemService.findAuctionItems();
 		model.addAttribute("items", auctionItems);
+
+		// 로그인 사용자의 입찰 경매 ID 목록 추가
+		List<Long> myBidAuctionIds = new ArrayList<>();
+		if (userDetails != null) {
+			String email = userDetails.getUsername();
+			Member member = memberRepository.findByEmail(email)
+					.orElse(null);
+			if (member != null) {
+				myBidAuctionIds = bidService.findAuctionIdsByBidder(member.getId());
+			}
+		}
+		model.addAttribute("myBidAuctionIds", myBidAuctionIds);
+		//logger.info("myBidAuctionIds: {}", myBidAuctionIds);
 		return "item";
 	}
 

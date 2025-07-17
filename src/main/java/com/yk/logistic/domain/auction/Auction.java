@@ -23,10 +23,10 @@ public class Auction {
     private Item item; // 경매 대상 상품
 
     @Column(nullable = false)
-    private int startPrice; // 경매 시작가
+    private Long startPrice; // 경매 시작가
 
     @Column(nullable = false)
-    private int currentPrice; // 현재 최고가
+    private Long currentPrice; // 현재 최고가
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "winner_id")
@@ -43,7 +43,7 @@ public class Auction {
 
     // 생성자 및 빌더
     @Builder
-    public Auction(Item item, int startPrice, LocalDateTime startTime, LocalDateTime endTime) {
+    public Auction(Item item, Long startPrice, LocalDateTime startTime, LocalDateTime endTime) {
         this.item = item;
         this.startPrice = startPrice;
         this.startTime = startTime;
@@ -63,8 +63,8 @@ public class Auction {
             throw new IllegalStateException("진행 중인 경매만 취소할 수 있습니다.");
         }
         this.status = AuctionStatus.CANCELLED;
-        this.startPrice = 0;
-        this.currentPrice = 0;
+        this.startPrice = 0L;
+        this.currentPrice = 0L;
         this.winner = null;
         this.endTime = LocalDateTime.now(); // endTime 초기화
     }
@@ -78,7 +78,7 @@ public class Auction {
     }
 
     // 도메인 메서드: 입찰 처리
-    public void placeBid(int bidPrice, Member bidder) {
+    public void placeBid(Long bidPrice, Member bidder) {
         if (bidPrice <= currentPrice) {
             throw new IllegalArgumentException("입찰가는 현재가보다 높아야 합니다.");
         }

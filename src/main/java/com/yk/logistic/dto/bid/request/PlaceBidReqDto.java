@@ -1,4 +1,4 @@
-package com.yk.logistic.dto.auction.request;
+package com.yk.logistic.dto.bid.request;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PlaceBidReqDto {
-    private int bidPrice;
+    private Long bidPrice;
     private Long bidderId;
 }

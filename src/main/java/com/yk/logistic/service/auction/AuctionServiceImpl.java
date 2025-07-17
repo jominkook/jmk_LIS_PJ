@@ -25,7 +25,7 @@ public class AuctionServiceImpl implements AuctionService {
     private final MemberRepository memberRepository;
 
     @Override
-    public AuctionResDto startAuction(Long itemId, int startPrice, LocalDateTime endTime) {
+    public AuctionResDto startAuction(Long itemId, Long startPrice, LocalDateTime endTime) {
         // 아이템 조회 및 검증
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("아이템을 찾을 수 없습니다."));
@@ -52,7 +52,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public AuctionResDto placeBid(Long auctionId, int bidPrice, Long bidderId) {
+    public AuctionResDto placeBid(Long auctionId, Long bidPrice, Long bidderId) {
         // 경매 조회 및 검증
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new IllegalArgumentException("경매를 찾을 수 없습니다."));

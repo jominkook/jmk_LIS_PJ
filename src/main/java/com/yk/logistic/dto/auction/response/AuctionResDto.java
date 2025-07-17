@@ -10,14 +10,14 @@ import lombok.Setter;
 public class AuctionResDto {
     private Long auctionId; // 경매 ID
     private Long itemId; // 경매 대상 상품 ID
-    private int startPrice; // 경매 시작가
-    private int currentPrice; // 현재 최고가
+    private Long startPrice; // 경매 시작가
+    private Long currentPrice; // 현재 최고가
     private String winnerName; // 현재 최고 입찰자 이름
     private LocalDateTime startTime; // 경매 시작 시간
     private LocalDateTime endTime; // 경매 종료 시간
     private String status; // 경매 상태
 
-    public AuctionResDto(Long auctionId, Long itemId, int startPrice, int currentPrice, String winnerName,
+    public AuctionResDto(Long auctionId, Long itemId, Long startPrice, Long currentPrice, String winnerName,
                          LocalDateTime startTime, LocalDateTime endTime, String status) {
         this.auctionId = auctionId;
         this.itemId = itemId;

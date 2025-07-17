@@ -6,10 +6,10 @@ import java.time.LocalDateTime;
 
 public interface AuctionService {
     // 경매 시작
-    AuctionResDto startAuction(Long itemId, int startPrice, LocalDateTime endTime);
+    AuctionResDto startAuction(Long itemId, Long startPrice, LocalDateTime endTime);
 
     // 입찰
-    AuctionResDto placeBid(Long auctionId, int bidPrice, Long bidderId);
+    AuctionResDto placeBid(Long auctionId, Long bidPrice, Long bidderId);
 
     //경매 취소
     AuctionResDto cancelAuction(Long auctionId);
